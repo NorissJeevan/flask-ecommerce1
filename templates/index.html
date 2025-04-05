@@ -1,0 +1,125 @@
+{% extends 'layout.html' %}
+
+{% block title %}Tradello - Home{% endblock %}
+
+{% block header_content %}
+<div class="row">
+    <div class="col-md-6">
+        <h1 class="text-white">Great deals happening <br> Right Now!</h1>
+        <p>Enjoy a safe, convenient shopping experience</p>
+        <p>Shop stress-free from home. We're ready to help, online or by phone.</p>
+        <a href="{{ url_for('product_page') }}" class="btn btn-main">Explore Now &#8594;</a>
+    </div>
+    <div class="col-md-6">
+        <img src="{{ url_for('static', filename='images/laptop-banner.png') }}" alt="banner-image" class="center">
+    </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<!-- featured products -->
+<div class="small-container mt-5">
+    <h2 class="title">Featured Products</h2>
+    <div class="row horizontal-scroll-wrapper squares">
+        {% for product in featured_products %}
+        <div class="col-4 box-container">
+            <div class="image-overlay"></div>
+            <img src="{{ url_for('static', filename='images/' + product.image) }}" alt="{{ product.name }}">
+            <h5 class="product_name">{{ product.name }}</h5>
+            <div class="rating">
+                {% for i in range(product.rating|int) %}
+                <i class="fa fa-star"></i>
+                {% endfor %}
+                {% if product.rating % 1 == 0.5 %}
+                <i class="fa fa-star-half-o"></i>
+                {% endif %}
+                {% for i in range(5 - product.rating|int - (1 if product.rating % 1 == 0.5 else 0)) %}
+                <i class="fa fa-star-o"></i>
+                {% endfor %}
+            </div>
+            <div class="content-details fadeIn-bottom">
+                <h3 class="content-title">{{ product.name }}</h3>
+                <h4 class="content-price">Rs{{ product.price }}</h4>
+                <form class="add-to-cart-form" action="{{ url_for('add_to_cart') }}" method="post">
+                    <input type="hidden" name="product_id" value="{{ product.id }}">
+                    <input type="hidden" name="quantity" value="1">
+                    <button type="submit" class="content-btn btn btn-secondary" title="Add to Cart">
+                        <i class="fa fa-cart-plus" aria-hidden="true"></i>
+                    </button>
+                </form>
+            </div>
+            <p class="price_name">Rs{{ product.price }}</p>
+            <form class="add-to-cart-form" action="{{ url_for('add_to_cart') }}" method="post">
+                <input type="hidden" name="product_id" value="{{ product.id }}">
+                <input type="hidden" name="quantity" value="1">
+                <button type="submit" class="btn btn-secondary" title="Add to Cart">
+                    <i class="fa fa-cart-plus" aria-hidden="true"></i>
+                </button>
+            </form>
+        </div>
+        {% endfor %}
+    </div>
+    
+    <!-- Latest products -->
+    <h2 class="title">Latest Products</h2>
+    <div class="row">
+        {% for product in latest_products %}
+        <div class="col-4 box-container">
+            <img src="{{ url_for('static', filename='images/' + product.image) }}" alt="{{ product.name }}">
+            <h5 class="product_name">{{ product.name }}</h5>
+            <div class="rating">
+                {% for i in range(product.rating|int) %}
+                <i class="fa fa-star"></i>
+                {% endfor %}
+                {% if product.rating % 1 == 0.5 %}
+                <i class="fa fa-star-half-o"></i>
+                {% endif %}
+                {% for i in range(5 - product.rating|int - (1 if product.rating % 1 == 0.5 else 0)) %}
+                <i class="fa fa-star-o"></i>
+                {% endfor %}
+            </div>
+            <p class="price_name">Rs{{ product.price }}</p>
+            <form class="add-to-cart-form" action="{{ url_for('add_to_cart') }}" method="post">
+                <input type="hidden" name="product_id" value="{{ product.id }}">
+                <input type="hidden" name="quantity" value="1">
+                <button type="submit" class="btn btn-secondary" title="Add to Cart">
+                    <i class="fa fa-cart-plus" aria-hidden="true"></i>
+                </button>
+            </form>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/auth.js') }}"></script>
+<script src="{{ url_for('static', filename='js/cart.js') }}"></script>
+<script>
+    // Handle add to cart form submissions via AJAX
+    $(document).ready(function() {
+        $('.add-to-cart-form').on('submit', function(e) {
+            e.preventDefault();
+            
+            $.ajax({
+                type: 'POST',
+                url: $(this).attr('action'),
+                data: $(this).serialize(),
+                dataType: 'json',
+                success: function(response) {
+                    alert(response.message);
+                    $('#cartItems').text(response.cart_count);
+                },
+                error: function(xhr) {
+                    if (xhr.status === 401) {
+                        // Not logged in
+                        window.location.href = "{{ url_for('register') }}";
+                    } else {
+                        alert('Error: ' + xhr.responseJSON.message);
+                    }
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}
