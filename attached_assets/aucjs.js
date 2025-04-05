@@ -13,6 +13,61 @@ class AuctionSystem {
         this.isAuctionActive = true;
     }
 
+    // Safe method to update element content
+    safeSetHTML(elementId, content) {
+        const element = document.getElementById(elementId);
+        if (element) {
+            element.innerHTML = content;
+        }
+    }
+    
+    // Safe method to update element text content
+    safeSetText(elementId, content) {
+        const element = document.getElementById(elementId);
+        if (element) {
+            element.textContent = content;
+        }
+    }
+    
+    // Safe method to update element class
+    safeSetClass(elementId, className) {
+        const element = document.getElementById(elementId);
+        if (element) {
+            element.className = className;
+        }
+    }
+
+    // Initialize all components
+    init() {
+        document.addEventListener('DOMContentLoaded', () => {
+            // Check if auction elements exist before continuing
+            if (!document.getElementById('auctionTimer')) {
+                console.log('Auction elements not found on this page, skipping auction initialization');
+                return; // Exit early if auction elements don't exist
+            }
+            
+            this.setupWebSocket();
+            this.initializeCountdownTimer();
+            this.loadBidHistory();
+            this.setupEventListeners();
+            this.updateUI();
+            this.checkForExistingBids();
+        });
+    }
+
+    // Get product ID from URL
+    getProductIdFromUrl() {
+        const urlParams = new URLSearchParams(window.location.search);
+        this.currentUser = this.getCurrentUser();
+        this.auctionEndTime = new Date(Date.now() + (2 * 24 * 60 * 60 * 1000) + (14 * 60 * 60 * 1000) + (36 * 60 * 1000)); // Default: 2d 14h 36m from now
+        this.bidHistory = [];
+        this.currentBid = 587.50;
+        this.startingBid = 450.00;
+        this.minimumBidIncrement = 0.50;
+        this.buyNowPrice = 799.99;
+        this.isAuctionActive = true;
+    }
+
     // Initialize all components
     init() {
         document.addEventListener('DOMContentLoaded', () => {
@@ -26,7 +81,6 @@ class AuctionSystem {
     }
 
     // Get product ID from URL
-    getProductIdFromUrl() {
         const urlParams = new URLSearchParams(window.location.search);
         return urlParams.get('id') || 'default_product_id';
     }
@@ -120,9 +174,9 @@ class AuctionSystem {
     // Update the timer display
     updateTimerDisplay() {
         if (!this.isAuctionActive) {
-            document.getElementById('auctionTimer').innerHTML = 'Auction Ended';
-            document.getElementById('bidStatus').textContent = 'Ended';
-            document.getElementById('bidStatus').className = 'badge badge-secondary';
+            this.safeSetHTML('auctionTimer' = 'Auction Ended';
+            this.safeSetText('bidStatus' = 'Ended';
+            this.safeSetClass('bidStatus' = 'badge badge-secondary';
             clearInterval(this.timerInterval);
             return;
         }
@@ -140,10 +194,10 @@ class AuctionSystem {
         const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
         const seconds = Math.floor((diff % (1000 * 60)) / 1000);
 
-        document.getElementById('days').textContent = days;
-        document.getElementById('hours').textContent = hours;
-        document.getElementById('minutes').textContent = minutes;
-        document.getElementById('seconds').textContent = seconds;
+        this.safeSetText('days' = days;
+        this.safeSetText('hours' = hours;
+        this.safeSetText('minutes' = minutes;
+        this.safeSetText('seconds' = seconds;
     }
 
     // Load bid history (simulated)
@@ -182,7 +236,7 @@ class AuctionSystem {
             historyList.appendChild(row);
         });
 
-        document.getElementById('bidCount').textContent = `${this.bidHistory.length} bids`;
+        this.safeSetText('bidCount' = `${this.bidHistory.length} bids`;
     }
 
     // Setup all event listeners
@@ -406,7 +460,7 @@ class AuctionSystem {
 
     // Update UI elements
     updateUI() {
-        document.getElementById('currentBid').textContent = `$${this.currentBid.toFixed(2)}`;
+        this.safeSetText('currentBid' = `$${this.currentBid.toFixed(2)}`;
         document.getElementById('bidAmount').min = (this.currentBid + this.minimumBidIncrement).toFixed(2);
         document.getElementById('bidAmount').value = (this.currentBid + this.minimumBidIncrement).toFixed(2);
         document.getElementById('maxAutoBid').min = (this.currentBid + this.minimumBidIncrement).toFixed(2);
@@ -425,7 +479,7 @@ class AuctionSystem {
             const highestUserBid = Math.max(...userBids.map(bid => bid.amount));
             if (highestUserBid < this.currentBid) {
                 this.showOutbidNotification({
-                    product_name: document.getElementById('productTitle').textContent,
+                    product_name: document.getElementById('productTitle') ? document.getElementById('productTitle').textContent : "Product",
                     current_bid: this.currentBid
                 });
             }
@@ -435,7 +489,7 @@ class AuctionSystem {
     // Simulate new bid for demo purposes
     simulateNewBid(data) {
         this.currentBid = data.amount;
-        document.getElementById('highestBidder').textContent = data.bidder;
+        this.safeSetText('highestBidder' = data.bidder;
         this.updateUI();
         
         this.bidHistory.unshift(data);
@@ -448,7 +502,7 @@ class AuctionSystem {
     simulateBuyNow() {
         this.isAuctionActive = false;
         this.currentBid = this.buyNowPrice;
-        document.getElementById('highestBidder').textContent = this.currentUser.username;
+        this.safeSetText('highestBidder' = this.currentUser.username;
         this.updateUI();
         
         this.bidHistory.unshift({

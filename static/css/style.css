@@ -4,6 +4,25 @@
     box-sizing: border-box;
 }
 
+/* Store badges styling */
+.store-badges {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  margin: 30px 0;
+}
+
+.store-badges img {
+  max-width: 160px;
+  height: auto;
+  transition: transform 0.3s ease;
+}
+
+.store-badges img:hover {
+  transform: scale(1.05);
+}
+
 body {
     font-family: 'Recursive', sans-serif;
 }
@@ -466,4 +485,23 @@ ul {
 .cart-img {
     position: relative;
     margin-right: 10px;
+}
+
+/* Store badges styling */
+.store-badges {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  margin: 30px 0;
+}
+
+.store-badges img {
+  max-width: 160px;
+  height: auto;
+  transition: transform 0.3s ease;
+}
+
+.store-badges img:hover {
+  transform: scale(1.05);
 }
