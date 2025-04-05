@@ -88,62 +88,36 @@ function formatPrice(price, currency = 'USD') {
  * @param {string} type - The type of message (success, error, info, warning)
  */
 function showFlashMessage(message, type = 'info') {
-    // The function will only run when the DOM is fully loaded
-    if (document.readyState === 'loading') {
+    // Make sure DOM is ready
+    if (!document.body) {
+        // If DOM is not ready, wait for it
         document.addEventListener('DOMContentLoaded', function() {
-            createFlashMessage(message, type);
+            showFlashMessage(message, type);
         });
-    } else {
-        createFlashMessage(message, type);
+        return;
     }
-}
-
-/**
- * Helper function to create and insert a flash message
- * @param {string} message - The message to display
- * @param {string} type - The type of message
- */
-function createFlashMessage(message, type) {
-    try {
-        // Create the message element
-        const flashMessage = document.createElement('div');
-        flashMessage.className = `alert alert-${type} alert-dismissible fade show`;
-        flashMessage.setAttribute('role', 'alert');
-        
-        // Add the message content
-        flashMessage.textContent = message;
-        
-        // Add the close button
-        const closeButton = document.createElement('button');
-        closeButton.type = 'button';
-        closeButton.className = 'close';
-        closeButton.setAttribute('data-dismiss', 'alert');
-        closeButton.setAttribute('aria-label', 'Close');
-        
-        const closeIcon = document.createElement('span');
-        closeIcon.setAttribute('aria-hidden', 'true');
-        closeIcon.innerHTML = '&times;';
-        
-        closeButton.appendChild(closeIcon);
-        flashMessage.appendChild(closeButton);
-        
-        // Find a container to append to
-        const container = document.querySelector('.container') || document.body;
-        
-        if (container) {
-            container.insertBefore(flashMessage, container.firstChild);
-            
-            // Remove after 5 seconds
-            setTimeout(function() {
-                flashMessage.classList.remove('show');
-                setTimeout(function() {
-                    if (flashMessage.parentNode) {
-                        flashMessage.parentNode.removeChild(flashMessage);
-                    }
-                }, 150);
-            }, 5000);
-        }
-    } catch (e) {
-        console.error('Error showing flash message:', e);
-    }
+    
+    // Create the message element
+    const flashMessage = document.createElement('div');
+    flashMessage.className = `alert alert-${type} alert-dismissible fade show`;
+    flashMessage.setAttribute('role', 'alert');
+    
+    // Add the message content
+    flashMessage.innerHTML = `
+        ${message}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    `;
+    
+    // Add to the document
+    document.body.insertBefore(flashMessage, document.body.firstChild);
+    
+    // Remove after 5 seconds
+    setTimeout(() => {
+        flashMessage.classList.remove('show');
+        setTimeout(() => {
+            flashMessage.remove();
+        }, 150);
+    }, 5000);
 }
