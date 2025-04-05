@@ -4,26 +4,128 @@
 
 {% block css %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/style2.css') }}">
+<style>
+  /* Enhanced styles for Tradello branding */
+  :root {
+    --tradello-primary: #1a2e42;    /* Dark blue from logo */
+    --tradello-secondary: #3c92ca;  /* Light blue from logo */
+    --tradello-accent: #e94b35;     /* Red accent */
+    --tradello-light: #f5f7fa;      /* Light background */
+  }
+  
+  .alert-info {
+    background-color: #e6ecf6;
+    border-color: var(--tradello-secondary);
+    color: var(--tradello-primary);
+  }
+  
+  .section-header {
+    color: var(--tradello-primary);
+    border-top: 4px solid var(--tradello-secondary);
+  }
+  
+  .btn-primary {
+    background-color: var(--tradello-primary);
+    border-color: var(--tradello-primary);
+    transition: all 0.3s ease;
+  }
+  
+  .btn-primary:hover {
+    background-color: var(--tradello-secondary);
+    border-color: var(--tradello-secondary);
+  }
+  
+  .badge-secondary {
+    background-color: var(--tradello-accent);
+  }
+  
+  .product-price {
+    color: var(--tradello-accent);
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+  
+  .nav-tabs .nav-link.active {
+    color: var(--tradello-primary);
+    background-color: #e6ecf6;
+    border-color: var(--tradello-secondary);
+  }
+  
+  .product-title {
+    color: var(--tradello-primary);
+    font-weight: 600;
+  }
+  
+  .product-subtitle {
+    color: var(--tradello-secondary);
+    font-style: italic;
+  }
+  
+  .chat {
+    background-color: var(--tradello-primary);
+  }
+  
+  .chat:hover {
+    background-color: var(--tradello-secondary);
+  }
+  
+  .modal-header {
+    background-color: var(--tradello-primary);
+  }
+  
+  .carousel-indicators li {
+    background-color: var(--tradello-secondary);
+  }
+  
+  .carousel-indicators li.active {
+    background-color: var(--tradello-primary);
+  }
+  
+  .similar-product {
+    transition: transform 0.3s ease;
+    cursor: pointer;
+    border: 1px solid #eee;
+    padding: 10px;
+  }
+  
+  .similar-product:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  }
+  
+  .quantity-selector {
+    border: 2px solid var(--tradello-secondary);
+    border-radius: 4px;
+  }
+</style>
 {% endblock %}
 
 {% block header_content %}{% endblock %}
 
 {% block content %}
-<!-- ADD TOP ALERT HERE -->
+<!-- Enhanced Alert Banner -->
 <div class="alert alert-info w-100 alert-dismissible fade show" role="alert">
-  <p>Not looking for unicorn plus toys? browse our other unicorn products</p>
-  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-    <span aria-hidden="true">&times;</span>
-  </button>
+  <div class="container d-flex align-items-center">
+    <i class="fa fa-info-circle mr-2"></i>
+    <p class="mb-0">Not looking for unicorn plush toys? Browse our other unicorn products</p>
+    <button type="button" class="close ml-auto" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
 </div>
 
 <!-- Main Content -->
-<main class="container">
+<main class="container mt-4">
   <div class="row">
-    <!-- Carousel Images -->
+    <!-- Enhanced Carousel Images with Indicators -->
     <div class="col-md-7">
-      <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
-        <div class="carousel-inner">
+      <div id="productCarousel" class="carousel slide" data-ride="carousel">
+        <ol class="carousel-indicators">
+          <li data-target="#productCarousel" data-slide-to="0" class="active"></li>
+          <li data-target="#productCarousel" data-slide-to="1"></li>
+          <li data-target="#productCarousel" data-slide-to="2"></li>
+        </ol>
+        <div class="carousel-inner shadow-sm rounded">
           <div class="carousel-item active">
             <img class="d-block w-100" src="{{ url_for('static', filename='images/product1.png') }}" alt="First slide">
           </div>
@@ -34,100 +136,188 @@
             <img class="d-block w-100" src="{{ url_for('static', filename='images/product3.png') }}" alt="Third slide">
           </div>
         </div>
-        <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+        <a class="carousel-control-prev" href="#productCarousel" role="button" data-slide="prev">
           <span class="carousel-control-prev-icon" aria-hidden="true"></span>
           <span class="sr-only">Previous</span>
         </a>
-        <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
+        <a class="carousel-control-next" href="#productCarousel" role="button" data-slide="next">
           <span class="carousel-control-next-icon" aria-hidden="true"></span>
           <span class="sr-only">Next</span>
         </a>
       </div>
     </div>
 
-    <!-- Main Product Information -->
+    <!-- Enhanced Product Information -->
     <div class="col-md-5">
-      <h2>Giant Unicorn Plush
-        <span class="badge badge-secondary">New</span>
-      </h2>
-      <p>Soft, Sparkly, Magical</p>
-      <hr>
-      <h6>Price</h6>
-      <p>$99.99</p>
+      <div class="card border-0">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-center">
+            <h2 class="product-title mb-0">Giant Unicorn Plush</h2>
+            <span class="badge badge-secondary">New</span>
+          </div>
+          <p class="product-subtitle mt-1">Soft, Sparkly, Magical</p>
+          <div class="d-flex align-items-center mt-3">
+            <div>
+              <i class="fa fa-star text-warning"></i>
+              <i class="fa fa-star text-warning"></i>
+              <i class="fa fa-star text-warning"></i>
+              <i class="fa fa-star text-warning"></i>
+              <i class="fa fa-star text-warning"></i>
+              <span class="text-muted ml-2">(23 reviews)</span>
+            </div>
+          </div>
+          
+          <hr>
+          
+          <div class="d-flex justify-content-between align-items-center">
+            <h6 class="text-uppercase">Price</h6>
+            <p class="product-price mb-0">$99.99</p>
+          </div>
+          
+          <div class="my-4">
+            <p><i class="fa fa-truck mr-2 text-muted"></i> Free shipping on orders over $50</p>
+            <p><i class="fa fa-check-circle mr-2 text-success"></i> In stock and ready to ship</p>
+          </div>
 
-      <!-- Form for adding to cart -->
-      <form id="quantityOfUnicornsForm" action="{{ url_for('add_to_cart') }}" method="post">
-        <input type="hidden" name="product_id" value="14">
-        <div class="form-row add-to-cart align-items-center">
-          <div class="col-12 my-1">
-            <label class="mr-sm-12" for="quantityOfUnicorns">Select a Quantity</label>
-          </div>
-          <div class="col-12 my-1 form-group">
-            <select class="custom-select mr-sm-2 form-control" id="quantityOfUnicorns" name="quantity">
-              <option value="1">1</option>
-              <option value="2">2</option>
-              <option value="3">3</option>
-              <option value="4">4</option>
-              <option value="5">5</option>
-            </select>
-          </div>
-          <div class="col-12 my-1">
-            <button type="submit" class="btn btn-primary">Add to Cart</button>
-          </div>
+          <!-- Enhanced Form for adding to cart -->
+          <form id="quantityOfUnicornsForm" action="{{ url_for('add_to_cart') }}" method="post" class="mt-4">
+            <input type="hidden" name="product_id" value="14">
+            <div class="form-row add-to-cart align-items-center">
+              <div class="col-12 my-1">
+                <label class="font-weight-bold" for="quantityOfUnicorns">Select a Quantity</label>
+              </div>
+              <div class="col-12 my-1 form-group">
+                <select class="custom-select quantity-selector form-control" id="quantityOfUnicorns" name="quantity">
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
+                </select>
+              </div>
+              <div class="col-12 my-1">
+                <button type="submit" class="btn btn-primary btn-lg btn-block"><i class="fa fa-shopping-cart mr-2"></i>Add to Cart</button>
+              </div>
+            </div>
+          </form>
         </div>
-      </form>
+      </div>
     </div>
   </div>
 
-  <!-- Scrollspy connected to Dropdown Menu -->
-  <div data-spy="scroll" data-target="#sections" data-offset="0">
-    <!-- Product Information -->
-    <div class="row">
-      <div class="col-12">
-        <h4 id="product-info" class="section-header">Product Information</h4>
+  <!-- Enhanced Product Information Section -->
+  <div class="row mt-5">
+    <div class="col-12">
+      <h4 id="product-info" class="section-header">Product Information</h4>
 
-        <!-- Product Information Tabs -->
-        <nav>
-          <div class="nav nav-tabs" id="nav-tab" role="tablist">
-            <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Description</a>
-            <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">Details</a>
-          </div>
-        </nav>
-        <div class="tab-content" id="nav-tabContent">
-          <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
-            <p>This graceful unicorn will prance right into any child's collection -- and heart! With its pretty 
-              pink mane and tail, both scattered through with shimmering silver strands that catch the light, 
-              this enchanting friend is sure to become a new favorite. Additional irresistible details include 
-              super-silky plush fur, satin star decorations, beautiful blue eyes, and a soft, shiny horn.</p>
-          </div>
-          <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
-            <ul>
-              <li>Suitable for ages 3 years and up</li>
-              <li>Silky plush fur</li>
-              <li>Measure 36" H</li>
-              <li>Imported</li>
-            </ul>
+      <!-- Enhanced Tabs -->
+      <nav>
+        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+          <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">
+            <i class="fa fa-file-text-o mr-2"></i>Description
+          </a>
+          <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">
+            <i class="fa fa-list-ul mr-2"></i>Details
+          </a>
+          <a class="nav-item nav-link" id="nav-reviews-tab" data-toggle="tab" href="#nav-reviews" role="tab" aria-controls="nav-reviews" aria-selected="false">
+            <i class="fa fa-star mr-2"></i>Reviews
+          </a>
+        </div>
+      </nav>
+      <div class="tab-content p-3 border border-top-0" id="nav-tabContent">
+        <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+          <p class="lead">This graceful unicorn will prance right into any child's collection -- and heart!</p>
+          <p>With its pretty pink mane and tail, both scattered through with shimmering silver strands that catch the light, 
+            this enchanting friend is sure to become a new favorite. Additional irresistible details include 
+            super-silky plush fur, satin star decorations, beautiful blue eyes, and a soft, shiny horn.</p>
+          <p>Perfect for imaginative play, this magical companion is a wonderful birthday or holiday gift for any unicorn enthusiast.</p>
+        </div>
+        <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item"><i class="fa fa-check text-success mr-2"></i>Suitable for ages 3 years and up</li>
+            <li class="list-group-item"><i class="fa fa-check text-success mr-2"></i>Silky plush fur</li>
+            <li class="list-group-item"><i class="fa fa-check text-success mr-2"></i>Measures 36" H</li>
+            <li class="list-group-item"><i class="fa fa-check text-success mr-2"></i>Machine washable (gentle cycle)</li>
+            <li class="list-group-item"><i class="fa fa-check text-success mr-2"></i>Imported</li>
+            <li class="list-group-item"><i class="fa fa-check text-success mr-2"></i>SKU: UNI-36-PLU</li>
+          </ul>
+        </div>
+        <div class="tab-pane fade" id="nav-reviews" role="tabpanel" aria-labelledby="nav-reviews-tab">
+          <div class="reviews-container">
+            <!-- Sample review -->
+            <div class="review-item border-bottom pb-3 mb-3">
+              <div class="d-flex justify-content-between">
+                <div>
+                  <i class="fa fa-star text-warning"></i>
+                  <i class="fa fa-star text-warning"></i>
+                  <i class="fa fa-star text-warning"></i>
+                  <i class="fa fa-star text-warning"></i>
+                  <i class="fa fa-star text-warning"></i>
+                </div>
+                <small class="text-muted">2 days ago</small>
+              </div>
+              <h6 class="mt-1">Amazing quality!</h6>
+              <p class="mb-1">My daughter absolutely loves this unicorn. The quality is exceptional and it's much larger than I expected!</p>
+              <small class="text-muted">By: Sarah M.</small>
+            </div>
+            
+            <!-- Sample review 2 -->
+            <div class="review-item">
+              <div class="d-flex justify-content-between">
+                <div>
+                  <i class="fa fa-star text-warning"></i>
+                  <i class="fa fa-star text-warning"></i>
+                  <i class="fa fa-star text-warning"></i>
+                  <i class="fa fa-star text-warning"></i>
+                  <i class="fa fa-star-o text-warning"></i>
+                </div>
+                <small class="text-muted">1 week ago</small>
+              </div>
+              <h6 class="mt-1">Beautiful unicorn</h6>
+              <p class="mb-1">The colors are vibrant and it's super soft. My only complaint is that the horn is a bit too floppy.</p>
+              <small class="text-muted">By: John D.</small>
+            </div>
           </div>
         </div>
       </div>
     </div>
+  </div>
 
-    <!-- Similar Items -->
-    <div class="row">
-      <div class="col-12">
-        <h4 id="similar-items" class="section-header">Similar Items</h4>
-        <div class="row">
-          <div class="col-3">
-            <img class="w-100" src="{{ url_for('static', filename='images/recommendedProduct1.jpg') }}" alt="First similar">
+  <!-- Enhanced Similar Items Section -->
+  <div class="row mt-5 mb-5">
+    <div class="col-12">
+      <h4 id="similar-items" class="section-header">You Might Also Like</h4>
+      <div class="row">
+        <div class="col-md-3 col-6 mb-4">
+          <div class="similar-product text-center">
+            <img class="img-fluid mb-3" src="{{ url_for('static', filename='images/recommendedProduct1.jpg') }}" alt="Similar product">
+            <h6 class="mb-1">Rainbow Unicorn</h6>
+            <p class="text-muted mb-1">$79.99</p>
+            <button class="btn btn-sm btn-outline-primary">View Details</button>
           </div>
-          <div class="col-3">
-            <img class="w-100" src="{{ url_for('static', filename='images/recommendedProduct2.jpg') }}" alt="Second similar">
+        </div>
+        <div class="col-md-3 col-6 mb-4">
+          <div class="similar-product text-center">
+            <img class="img-fluid mb-3" src="{{ url_for('static', filename='images/recommendedProduct2.jpg') }}" alt="Similar product">
+            <h6 class="mb-1">Unicorn Plush Keychain</h6>
+            <p class="text-muted mb-1">$12.99</p>
+            <button class="btn btn-sm btn-outline-primary">View Details</button>
           </div>
-          <div class="col-3">
-            <img class="w-100" src="{{ url_for('static', filename='images/recommendedProduct3.jpg') }}" alt="Third similar">
+        </div>
+        <div class="col-md-3 col-6 mb-4">
+          <div class="similar-product text-center">
+            <img class="img-fluid mb-3" src="{{ url_for('static', filename='images/recommendedProduct3.jpg') }}" alt="Similar product">
+            <h6 class="mb-1">Unicorn Slippers</h6>
+            <p class="text-muted mb-1">$24.99</p>
+            <button class="btn btn-sm btn-outline-primary">View Details</button>
           </div>
-          <div class="col-3">
-            <img class="w-100" src="{{ url_for('static', filename='images/recommendedProduct4.jpg') }}" alt="Fourth similar">
+        </div>
+        <div class="col-md-3 col-6 mb-4">
+          <div class="similar-product text-center">
+            <img class="img-fluid mb-3" src="{{ url_for('static', filename='images/recommendedProduct4.jpg') }}" alt="Similar product">
+            <h6 class="mb-1">Mini Unicorn Set</h6>
+            <p class="text-muted mb-1">$49.99</p>
+            <button class="btn btn-sm btn-outline-primary">View Details</button>
           </div>
         </div>
       </div>
@@ -135,16 +325,22 @@
   </div>
 </main>
 
-<!-- Chat Button with Popover-->
-<button id="chatPopover" type="button" class="chat btn">Need help?</button>
+<!-- Enhanced Chat Button with Popover-->
+<button id="chatPopover" type="button" class="chat btn">
+  <i class="fa fa-comments"></i>
+  <span class="d-none d-md-inline-block ml-2">Need help?</span>
+</button>
 
-<!-- Modal -->
+<!-- Enhanced Modal -->
 <div class="modal fade" id="signUpModal" tabindex="-1" role="dialog" aria-labelledby="mySignUpModal" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <!-- Modal Header -->
       <div class="modal-header">
-        <h5 class="modal-title" id="modalHeader">Sign up for savings sent right to your inbox!</h5>
+        <h5 class="modal-title" id="modalHeader">
+          <i class="fa fa-envelope-o mr-2"></i>
+          Sign up for exclusive offers!
+        </h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -152,14 +348,15 @@
 
       <!-- Modal Body - Form -->
       <div class="modal-body">
+        <p class="lead">Join our mailing list and get 10% off your first order!</p>
         <form>
           <div class="form-group">
             <label for="formGroupFirstNameInput">First Name</label>
-            <input type="text" class="form-control" id="formGroupFirstNameInput" placeholder="">
+            <input type="text" class="form-control" id="formGroupFirstNameInput" placeholder="Enter your first name">
           </div>
           <div class="form-group">
             <label for="formGroupLastNameInput2">Last Name</label>
-            <input type="text" class="form-control" id="formGroupLastNameInput2" placeholder="">
+            <input type="text" class="form-control" id="formGroupLastNameInput2" placeholder="Enter your last name">
           </div>
           <div class="form-group">
             <label for="formGroupInputEmail">E-mail</label>
@@ -168,14 +365,16 @@
           </div>
           <div class="form-check">
             <input type="checkbox" class="form-check-input" id="exampleCheck1">
-            <label class="form-check-label" for="exampleCheck1">Check me out</label>
+            <label class="form-check-label" for="exampleCheck1">I agree to receive promotional emails</label>
           </div>
         </form>
       </div>
 
       <!-- Modal Footer - Button -->
       <div class="modal-footer">
-        <button type="button" id="signUpBtn" class="btn btn btn-primary">Sign me up!</button>
+        <button type="button" id="signUpBtn" class="btn btn-primary">
+          <i class="fa fa-paper-plane mr-2"></i>Sign me up!
+        </button>
       </div>
     </div>
   </div>
@@ -187,6 +386,26 @@
 <script>
   // Handle add to cart form
   $(document).ready(function() {
+    // Setup toast notifications instead of alerts
+    function showToast(message, type) {
+      $('body').append(`
+        <div class="position-fixed bottom-0 right-0 p-3" style="z-index: 9999; right: 0; bottom: 0;">
+          <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-delay="3000">
+            <div class="toast-header bg-${type} text-white">
+              <strong class="mr-auto">Tradello</strong>
+              <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="toast-body">
+              ${message}
+            </div>
+          </div>
+        </div>
+      `);
+      $('.toast').toast('show');
+    }
+
     $('#quantityOfUnicornsForm').submit(function(e) {
       e.preventDefault();
       
@@ -196,15 +415,21 @@
         data: $(this).serialize(),
         dataType: 'json',
         success: function(response) {
-          alert(response.message);
+          showToast(response.message, 'success');
           $('#cartItems').text(response.cart_count);
+          
+          // Add animation to cart icon
+          $('.cart-img').addClass('animated bounce');
+          setTimeout(function() {
+            $('.cart-img').removeClass('animated bounce');
+          }, 1000);
         },
         error: function(xhr) {
           if (xhr.status === 401) {
             // Not logged in
             window.location.href = "{{ url_for('register') }}";
           } else {
-            alert('Error: ' + xhr.responseJSON.message);
+            showToast('Error: ' + xhr.responseJSON.message, 'danger');
           }
         }
       });
@@ -213,6 +438,17 @@
     // Setup the sign up button
     $('.signUpButton').click(function() {
       $('#signUpModal').modal('show');
+    });
+    
+    // Initialize tooltips
+    $('[data-toggle="tooltip"]').tooltip();
+    
+    // Smooth scrolling for anchor links
+    $('a[href^="#"]').on('click', function(e) {
+      e.preventDefault();
+      $('html, body').animate({
+        scrollTop: $($(this).attr('href')).offset().top - 100
+      }, 500, 'linear');
     });
   });
 </script>

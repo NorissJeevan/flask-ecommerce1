@@ -7,7 +7,7 @@
             "request": "launch",
             "module": "flask",
             "env": {
-                "FLASK_APP": "main.py",
+                "FLASK_APP": "main:app",
                 "FLASK_ENV": "development",
                 "FLASK_DEBUG": "1",
                 "SESSION_SECRET": "your-secret-key-for-development"
