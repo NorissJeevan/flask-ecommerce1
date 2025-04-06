@@ -1,0 +1,606 @@
+{% extends 'layout.html' %}
+
+{% block title %}Tradello | Auctions{% endblock %}
+
+{% block head_scripts %}
+<script src="https://cdn.socket.io/4.7.2/socket.io.min.js" integrity="sha384-mZLF4UVrpi/QTWPA7BjNPEnkIfRFn4ZEO3Qt/HFklTJBj/gBOV8G3HcKn4NfQblz" crossorigin="anonymous"></script>
+<script src="{{ url_for('static', filename='js/auction-socket.js') }}"></script>
+{% endblock %}
+
+{% block header_content %}
+<div class="hero-section">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-6 hero-content">
+                <h1>Live Auctions</h1>
+                <p>Bid on exclusive products and get amazing deals with our real-time auction platform.</p>
+                <a href="#auctions" class="btn">View Auctions</a>
+            </div>
+            <div class="col-md-6 text-center">
+                <img src="{{ url_for('static', filename='images/auction-hero.png') }}" alt="Auction Banner" class="img-fluid">
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block content %}
+{% if auction %}
+<!-- Single Auction Details -->
+<div class="container mt-5 mb-5">
+    <div class="row">
+        <!-- Product Image Gallery -->
+        <div class="col-md-5">
+            <div id="productCarousel" class="carousel slide" data-ride="carousel">
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <img src="{{ url_for('static', filename='images/product-images/product1.png') }}" class="d-block w-100" alt="Product Image 1">
+                    </div>
+                    <div class="carousel-item">
+                        <img src="{{ url_for('static', filename='images/product-images/product2.jpg') }}" class="d-block w-100" alt="Product Image 2">
+                    </div>
+                </div>
+                <a class="carousel-control-prev" href="#productCarousel" role="button" data-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Previous</span>
+                </a>
+                <a class="carousel-control-next" href="#productCarousel" role="button" data-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Next</span>
+                </a>
+            </div>
+        </div>
+        
+        <!-- Auction Info -->
+        <div class="col-md-7">
+            <h2 id="productTitle">{{ auction.title }}</h2>
+            <p id="productDescription" class="text-muted">{{ auction.description }}</p>
+            
+            <div class="card auction-info-card mb-4">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-6">
+                            <h6 class="text-muted">Auction Ends In</h6>
+                            <div id="auctionTimer" class="auction-timer" data-end-time="{{ auction.end_time }}">
+                                <span id="days">0</span>d 
+                                <span id="hours">0</span>h 
+                                <span id="minutes">0</span>m 
+                                <span id="seconds">0</span>s
+                            </div>
+                        </div>
+                        <div class="col-6 text-right">
+                            <h6 class="text-muted">Current Status</h6>
+                            <span id="bidStatus" class="badge badge-success">{{ auction.status|capitalize }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5>Current Bid</h5>
+                            <h3 id="currentBid" class="text-primary">${{ "%.2f"|format(auction.current_bid) }}</h3>
+                            <p class="text-muted"><span id="bidCount">{{ auction.bid_count }}</span> bids placed</p>
+                        </div>
+                        <div class="col-md-6 text-md-right">
+                            <h5>Buy Now Price</h5>
+                            <h3 class="text-success">${{ "%.2f"|format(auction.buy_now_price) }}</h3>
+                            <p class="text-muted">Skip the auction & buy now</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5>Seller Information</h5>
+                    <div class="d-flex align-items-center">
+                        <div class="seller-avatar mr-3">
+                            <i class="fas fa-user-circle fa-3x text-muted"></i>
+                        </div>
+                        <div>
+                            <h6 class="mb-0">{{ auction.seller }}</h6>
+                            <div class="seller-rating">
+                                {% for i in range(auction.seller_rating|int) %}
+                                <i class="fas fa-star text-warning"></i>
+                                {% endfor %}
+                                {% if auction.seller_rating % 1 != 0 %}
+                                <i class="fas fa-star-half-alt text-warning"></i>
+                                {% endif %}
+                                {% for i in range(5 - auction.seller_rating|int - (1 if auction.seller_rating % 1 != 0 else 0)) %}
+                                <i class="far fa-star text-warning"></i>
+                                {% endfor %}
+                                <span class="text-muted ml-1">({{ auction.seller_rating }})</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bid-actions">
+                {% if auction.status == 'active' %}
+                <form id="bid-form" class="bid-form" method="POST" action="{{ url_for('place_bid') }}">
+                    <input type="hidden" name="auction_id" value="{{ auction.id }}">
+                    <div class="form-group">
+                        <label for="bidAmount">Place Your Bid</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">$</span>
+                            </div>
+                            <input type="number" min="{{ auction.current_bid + 1 }}" step="0.01" class="form-control" id="bidAmount" name="bid_amount" placeholder="Enter bid amount">
+                        </div>
+                        <small class="form-text text-muted">Min bid: ${{ "%.2f"|format(auction.current_bid + 1) }}</small>
+                    </div>
+                    <button type="submit" class="btn btn-block">Place Bid</button>
+                </form>
+                
+                <div class="text-center my-3">
+                    <span class="text-muted">- OR -</span>
+                </div>
+                
+                <form id="buy-now-form" method="POST" action="{{ url_for('buy_now') }}">
+                    <input type="hidden" name="auction_id" value="{{ auction.id }}">
+                    <button type="submit" class="btn btn-secondary btn-block">Buy Now for ${{ "%.2f"|format(auction.buy_now_price) }}</button>
+                </form>
+                {% else %}
+                <div class="alert alert-warning">
+                    This auction has ended. The final price was ${{ "%.2f"|format(auction.current_bid) }}.
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <!-- Bid History -->
+    <div class="row mt-5">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Bid History</h5>
+                </div>
+                <div class="card-body">
+                    <div id="bidHistory" class="bid-history">
+                        {% for bid in auction.bids %}
+                        <div class="bid-history-item">
+                            <div class="d-flex justify-content-between">
+                                <span class="bidder-name">{{ bid.bidder }}</span>
+                                <span class="bid-amount">${{ "%.2f"|format(bid.amount) }}</span>
+                                <span class="bid-time text-muted">{{ bid.time }}</span>
+                            </div>
+                        </div>
+                        {% else %}
+                        <div class="text-center text-muted">No bids yet. Be the first to bid!</div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% else %}
+<!-- Auctions Listing -->
+<div class="container py-5" id="auctions">
+    <!-- Top Auction Categories -->
+    <div class="mb-5">
+        <h2 class="section-title mb-4">Shop by Category</h2>
+        <div class="row">
+            <div class="col-md-3 col-6 mb-4">
+                <div class="category-item text-center p-3">
+                    <div class="category-icon mb-3">
+                        <i class="fas fa-mobile-alt fa-3x"></i>
+                    </div>
+                    <h5>Electronics</h5>
+                </div>
+            </div>
+            <div class="col-md-3 col-6 mb-4">
+                <div class="category-item text-center p-3">
+                    <div class="category-icon mb-3">
+                        <i class="fas fa-gem fa-3x"></i>
+                    </div>
+                    <h5>Jewelry</h5>
+                </div>
+            </div>
+            <div class="col-md-3 col-6 mb-4">
+                <div class="category-item text-center p-3">
+                    <div class="category-icon mb-3">
+                        <i class="fas fa-paint-brush fa-3x"></i>
+                    </div>
+                    <h5>Art</h5>
+                </div>
+            </div>
+            <div class="col-md-3 col-6 mb-4">
+                <div class="category-item text-center p-3">
+                    <div class="category-icon mb-3">
+                        <i class="fas fa-car fa-3x"></i>
+                    </div>
+                    <h5>Vehicles</h5>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Auction Filter -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <form class="row align-items-center">
+                <div class="col-md-3 mb-3 mb-md-0">
+                    <label for="sort-by">Sort By</label>
+                    <select id="sort-by" class="form-control">
+                        <option>Ending Soon</option>
+                        <option>Price: Low to High</option>
+                        <option>Price: High to Low</option>
+                        <option>Most Bids</option>
+                    </select>
+                </div>
+                <div class="col-md-3 mb-3 mb-md-0">
+                    <label for="category">Category</label>
+                    <select id="category" class="form-control">
+                        <option>All Categories</option>
+                        <option>Electronics</option>
+                        <option>Jewelry</option>
+                        <option>Art</option>
+                        <option>Vehicles</option>
+                    </select>
+                </div>
+                <div class="col-md-3 mb-3 mb-md-0">
+                    <label for="price-range">Price Range</label>
+                    <select id="price-range" class="form-control">
+                        <option>All Prices</option>
+                        <option>Under $100</option>
+                        <option>$100 - $500</option>
+                        <option>$500 - $1000</option>
+                        <option>$1000+</option>
+                    </select>
+                </div>
+                <div class="col-md-3 text-md-right mt-md-4">
+                    <button type="submit" class="btn btn-block">Apply Filters</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Featured Auctions -->
+    <div class="mb-5">
+        <h2 class="section-title mb-4">Hot Auctions</h2>
+        <div class="row">
+            {% for auction in auctions[:4] %}
+            <div class="col-md-3 col-6 mb-4">
+                <div class="auction-card">
+                    <div class="position-relative">
+                        <img src="{{ url_for('static', filename='images/product-images/product1.png') }}" alt="{{ auction.title }}" class="auction-img">
+                        <div class="position-absolute p-2" style="bottom: 0; right: 0; background-color: rgba(0,0,0,0.6); color: white; border-radius: 4px 0 0 0;">
+                            <i class="fas fa-fire"></i> Hot
+                        </div>
+                    </div>
+                    <div class="auction-info">
+                        <h5 class="auction-title">{{ auction.title }}</h5>
+                        <div class="auction-meta">
+                            <span><i class="fas fa-gavel"></i> {{ auction.bid_count }} bids</span>
+                            <span><i class="fas fa-user"></i> {{ auction.seller }}</span>
+                        </div>
+                        <div class="auction-price mb-3">
+                            <strong>Current Bid:</strong> ${{ "%.2f"|format(auction.current_bid) }}
+                        </div>
+                        <div class="d-flex align-items-center justify-content-between mb-3">
+                            <div class="auction-timer-small">
+                                <small><i class="far fa-clock"></i> Ends in: 2d 8h</small>
+                            </div>
+                            <div>
+                                <span class="badge badge-success">{{ auction.status|capitalize }}</span>
+                            </div>
+                        </div>
+                        <a href="{{ url_for('auction_detail', auction_id=auction.id) }}" class="btn btn-block">View Auction</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- All Auctions -->
+    <div>
+        <h2 class="section-title mb-4">All Auctions</h2>
+        <div class="row">
+            {% for auction in auctions[4:] %}
+            <div class="col-md-3 col-6 mb-4">
+                <div class="auction-card">
+                    <img src="{{ url_for('static', filename='images/product-images/product2.jpg') }}" alt="{{ auction.title }}" class="auction-img">
+                    <div class="auction-info">
+                        <h5 class="auction-title">{{ auction.title }}</h5>
+                        <div class="auction-meta">
+                            <span><i class="fas fa-gavel"></i> {{ auction.bid_count }} bids</span>
+                            <span><i class="fas fa-user"></i> {{ auction.seller }}</span>
+                        </div>
+                        <div class="auction-price mb-3">
+                            <strong>Current Bid:</strong> ${{ "%.2f"|format(auction.current_bid) }}
+                        </div>
+                        <div class="d-flex align-items-center justify-content-between mb-3">
+                            <div class="auction-timer-small">
+                                <small><i class="far fa-clock"></i> Ends in: 1d 6h</small>
+                            </div>
+                            <div>
+                                <span class="badge badge-success">{{ auction.status|capitalize }}</span>
+                            </div>
+                        </div>
+                        <a href="{{ url_for('auction_detail', auction_id=auction.id) }}" class="btn btn-block">View Auction</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Pagination -->
+    <nav aria-label="Auction pagination" class="mt-5">
+        <ul class="pagination justify-content-center">
+            <li class="page-item disabled">
+                <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+            </li>
+            <li class="page-item active"><a class="page-link" href="#">1</a></li>
+            <li class="page-item"><a class="page-link" href="#">2</a></li>
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <li class="page-item">
+                <a class="page-link" href="#">Next</a>
+            </li>
+        </ul>
+    </nav>
+</div>
+
+<!-- How Auctions Work -->
+<div class="bg-light py-5 mt-5">
+    <div class="container">
+        <h2 class="text-center mb-5">How Our Auctions Work</h2>
+        <div class="row">
+            <div class="col-md-3 text-center mb-4 mb-md-0">
+                <div class="step-icon mb-3">
+                    <i class="fas fa-search fa-3x"></i>
+                </div>
+                <h4>Find an Auction</h4>
+                <p>Browse our wide selection of auctions and find items you're interested in.</p>
+            </div>
+            <div class="col-md-3 text-center mb-4 mb-md-0">
+                <div class="step-icon mb-3">
+                    <i class="fas fa-user-plus fa-3x"></i>
+                </div>
+                <h4>Register to Bid</h4>
+                <p>Create an account or login to place bids on your favorite items.</p>
+            </div>
+            <div class="col-md-3 text-center mb-4 mb-md-0">
+                <div class="step-icon mb-3">
+                    <i class="fas fa-gavel fa-3x"></i>
+                </div>
+                <h4>Place Your Bid</h4>
+                <p>Enter a bid higher than the current amount or use Buy Now to purchase instantly.</p>
+            </div>
+            <div class="col-md-3 text-center">
+                <div class="step-icon mb-3">
+                    <i class="fas fa-trophy fa-3x"></i>
+                </div>
+                <h4>Win & Checkout</h4>
+                <p>If you're the highest bidder when the auction ends, you win! Complete your purchase.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    {% if auction %}
+    // Initialize timer for single auction view
+    const endTimeStr = document.getElementById('auctionTimer').getAttribute('data-end-time');
+    const endTime = new Date(endTimeStr);
+    
+    function updateTimer() {
+        const now = new Date();
+        const diff = endTime - now;
+        
+        if (diff <= 0) {
+            document.getElementById('days').textContent = '0';
+            document.getElementById('hours').textContent = '0';
+            document.getElementById('minutes').textContent = '0';
+            document.getElementById('seconds').textContent = '0';
+            document.getElementById('bidStatus').textContent = 'Ended';
+            document.getElementById('bidStatus').className = 'badge badge-secondary';
+            
+            // Hide bid form if auction ended
+            const bidForm = document.getElementById('bid-form');
+            const buyNowForm = document.getElementById('buy-now-form');
+            if (bidForm) bidForm.style.display = 'none';
+            if (buyNowForm) buyNowForm.style.display = 'none';
+            
+            // Show ended message
+            const bidActions = document.querySelector('.bid-actions');
+            if (bidActions) {
+                const alert = document.createElement('div');
+                alert.className = 'alert alert-warning';
+                alert.textContent = 'This auction has ended. The final price was ${{ "%.2f"|format(auction.current_bid) }}.';
+                bidActions.innerHTML = '';
+                bidActions.appendChild(alert);
+            }
+            
+            return;
+        }
+        
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+        
+        document.getElementById('days').textContent = days;
+        document.getElementById('hours').textContent = hours;
+        document.getElementById('minutes').textContent = minutes;
+        document.getElementById('seconds').textContent = seconds;
+    }
+    
+    // Update immediately and then every second
+    updateTimer();
+    setInterval(updateTimer, 1000);
+    
+    // Bid form submission
+    const bidForm = document.getElementById('bid-form');
+    if (bidForm) {
+        bidForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(bidForm);
+            
+            fetch(bidForm.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Update current bid and count
+                    document.getElementById('currentBid').textContent = '$' + parseFloat(data.current_bid).toFixed(2);
+                    document.getElementById('bidCount').textContent = data.bid_count;
+                    
+                    // Update min bid amount
+                    document.getElementById('bidAmount').min = parseFloat(data.current_bid) + 1;
+                    document.querySelector('.form-text.text-muted').textContent = 'Min bid: $' + (parseFloat(data.current_bid) + 1).toFixed(2);
+                    
+                    // Clear bid input
+                    document.getElementById('bidAmount').value = '';
+                    
+                    // Show success message
+                    alert('Your bid has been placed!');
+                } else {
+                    alert('Error: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while placing your bid');
+            });
+        });
+    }
+    
+    // Buy Now form submission
+    const buyNowForm = document.getElementById('buy-now-form');
+    if (buyNowForm) {
+        buyNowForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(buyNowForm);
+            
+            fetch(buyNowForm.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Show success message
+                    alert('Congratulations! You have purchased this item.');
+                    
+                    // Update auction status
+                    document.getElementById('bidStatus').textContent = 'Sold';
+                    document.getElementById('bidStatus').className = 'badge badge-danger';
+                    
+                    // Hide bid forms
+                    document.querySelector('.bid-actions').innerHTML = '<div class="alert alert-success">You have successfully purchased this item. Please proceed to checkout.</div>';
+                } else {
+                    alert('Error: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while processing your purchase');
+            });
+        });
+    }
+    
+    // Initialize Socket.IO for real-time updates
+    try {
+        const socket = io();
+        const auctionId = '{{ auction.id }}';
+        
+        socket.on('connect', function() {
+            console.log('Connected to Socket.IO server');
+            socket.emit('join', { room: 'auction_' + auctionId });
+        });
+        
+        socket.on('bid_update', function(data) {
+            if (data.auction_id === parseInt(auctionId)) {
+                // Update current bid and count
+                document.getElementById('currentBid').textContent = '$' + parseFloat(data.current_bid).toFixed(2);
+                document.getElementById('bidCount').textContent = data.bid_count;
+                
+                // Update min bid amount
+                document.getElementById('bidAmount').min = parseFloat(data.current_bid) + 1;
+                document.querySelector('.form-text.text-muted').textContent = 'Min bid: $' + (parseFloat(data.current_bid) + 1).toFixed(2);
+                
+                // Add new bid to history
+                const bidHistory = document.getElementById('bidHistory');
+                const newBid = document.createElement('div');
+                newBid.className = 'bid-history-item';
+                newBid.innerHTML = `
+                    <div class="d-flex justify-content-between">
+                        <span class="bidder-name">${data.bidder}</span>
+                        <span class="bid-amount">$${parseFloat(data.amount).toFixed(2)}</span>
+                        <span class="bid-time text-muted">${data.time}</span>
+                    </div>
+                `;
+                
+                // Check if bid history has a "no bids" message
+                if (bidHistory.textContent.includes('No bids yet')) {
+                    bidHistory.innerHTML = '';
+                }
+                
+                bidHistory.insertBefore(newBid, bidHistory.firstChild);
+                
+                // Show notification if not your own bid
+                if (data.bidder !== 'You') {
+                    const notification = document.createElement('div');
+                    notification.className = 'alert alert-info alert-dismissible fade show mt-3';
+                    notification.innerHTML = `
+                        New bid: ${data.bidder} placed a bid of $${parseFloat(data.amount).toFixed(2)}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    `;
+                    document.querySelector('.bid-actions').prepend(notification);
+                    
+                    // Remove notification after 5 seconds
+                    setTimeout(() => {
+                        notification.remove();
+                    }, 5000);
+                }
+            }
+        });
+        
+        socket.on('auction_ended', function(data) {
+            if (data.auction_id === parseInt(auctionId)) {
+                // Update auction status
+                document.getElementById('bidStatus').textContent = 'Ended';
+                document.getElementById('bidStatus').className = 'badge badge-secondary';
+                
+                // Hide bid forms
+                const bidActions = document.querySelector('.bid-actions');
+                bidActions.innerHTML = '<div class="alert alert-warning">This auction has ended. The final price was $' + parseFloat(data.final_price).toFixed(2) + '.</div>';
+                
+                // Add winner announcement
+                if (data.winner) {
+                    const winnerAnnouncement = document.createElement('div');
+                    winnerAnnouncement.className = 'alert alert-success mt-3';
+                    winnerAnnouncement.textContent = 'Winner: ' + data.winner;
+                    bidActions.appendChild(winnerAnnouncement);
+                }
+            }
+        });
+    } catch (error) {
+        console.error('Socket.IO initialization error:', error);
+    }
+    {% endif %}
+});
+</script>
+{% endblock %}

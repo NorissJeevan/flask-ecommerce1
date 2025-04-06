@@ -1,0 +1,247 @@
+{% extends 'layout.html' %}
+
+{% block title %}Tradello | Products{% endblock %}
+
+{% block header_content %}
+<div class="hero-section">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-6 hero-content">
+                <h1>Discover Quality Products</h1>
+                <p>Browse our extensive collection of premium products from trusted brands.</p>
+                <a href="#product-list" class="btn">Shop Now</a>
+            </div>
+            <div class="col-md-6 text-center">
+                <img src="{{ url_for('static', filename='images/hero-products.png') }}" alt="Product Banner" class="img-fluid">
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="container py-5" id="product-list">
+    <!-- Product Categories -->
+    <div class="mb-5">
+        <h2 class="text-center mb-4">Shop by Category</h2>
+        <div class="row">
+            <div class="col-md-3 col-6 mb-4">
+                <div class="category-item text-center p-3">
+                    <div class="category-icon mb-3">
+                        <i class="fas fa-mobile-alt fa-3x"></i>
+                    </div>
+                    <h5>Electronics</h5>
+                </div>
+            </div>
+            <div class="col-md-3 col-6 mb-4">
+                <div class="category-item text-center p-3">
+                    <div class="category-icon mb-3">
+                        <i class="fas fa-tshirt fa-3x"></i>
+                    </div>
+                    <h5>Fashion</h5>
+                </div>
+            </div>
+            <div class="col-md-3 col-6 mb-4">
+                <div class="category-item text-center p-3">
+                    <div class="category-icon mb-3">
+                        <i class="fas fa-home fa-3x"></i>
+                    </div>
+                    <h5>Home & Living</h5>
+                </div>
+            </div>
+            <div class="col-md-3 col-6 mb-4">
+                <div class="category-item text-center p-3">
+                    <div class="category-icon mb-3">
+                        <i class="fas fa-gamepad fa-3x"></i>
+                    </div>
+                    <h5>Toys & Games</h5>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Product Filter -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <form class="row align-items-center">
+                <div class="col-md-3 mb-3 mb-md-0">
+                    <label for="sort-by">Sort By</label>
+                    <select id="sort-by" class="form-control">
+                        <option>Newest</option>
+                        <option>Price: Low to High</option>
+                        <option>Price: High to Low</option>
+                        <option>Popularity</option>
+                    </select>
+                </div>
+                <div class="col-md-3 mb-3 mb-md-0">
+                    <label for="category">Category</label>
+                    <select id="category" class="form-control">
+                        <option>All Categories</option>
+                        <option>Electronics</option>
+                        <option>Fashion</option>
+                        <option>Home & Living</option>
+                        <option>Toys & Games</option>
+                    </select>
+                </div>
+                <div class="col-md-3 mb-3 mb-md-0">
+                    <label for="price-range">Price Range</label>
+                    <select id="price-range" class="form-control">
+                        <option>All Prices</option>
+                        <option>Under $50</option>
+                        <option>$50 - $100</option>
+                        <option>$100 - $500</option>
+                        <option>$500+</option>
+                    </select>
+                </div>
+                <div class="col-md-3 text-md-right mt-md-4">
+                    <button type="submit" class="btn btn-block">Apply Filters</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Featured Products -->
+    <div class="mb-5">
+        <h2 class="section-title mb-4">Featured Products</h2>
+        <div class="row">
+            {% for product in products[:4] %}
+            <div class="col-md-3 col-6 mb-4">
+                <div class="product-card">
+                    <img src="{{ url_for('static', filename='images/product-images/' + product.image) }}" alt="{{ product.name }}" class="product-img">
+                    <div class="product-info">
+                        <h5 class="product-title">{{ product.name }}</h5>
+                        <div class="product-price">${{ "%.2f"|format(product.price) }}</div>
+                        <div class="product-rating">
+                            {% for i in range(product.rating|int) %}
+                            <i class="fas fa-star"></i>
+                            {% endfor %}
+                            {% if product.rating % 1 != 0 %}
+                            <i class="fas fa-star-half-alt"></i>
+                            {% endif %}
+                            {% for i in range(5 - product.rating|int - (1 if product.rating % 1 != 0 else 0)) %}
+                            <i class="far fa-star"></i>
+                            {% endfor %}
+                        </div>
+                        <form method="POST" action="{{ url_for('add_to_cart') }}" class="add-to-cart-form">
+                            <input type="hidden" name="product_id" value="{{ product.id }}">
+                            <input type="hidden" name="quantity" value="1">
+                            <button type="submit" class="btn btn-block">Add to Cart</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- All Products -->
+    <div>
+        <h2 class="section-title mb-4">All Products</h2>
+        <div class="row">
+            {% for product in products[4:] %}
+            <div class="col-md-3 col-6 mb-4">
+                <div class="product-card">
+                    <img src="{{ url_for('static', filename='images/product-images/' + product.image) }}" alt="{{ product.name }}" class="product-img">
+                    <div class="product-info">
+                        <h5 class="product-title">{{ product.name }}</h5>
+                        <div class="product-price">${{ "%.2f"|format(product.price) }}</div>
+                        <div class="product-rating">
+                            {% for i in range(product.rating|int) %}
+                            <i class="fas fa-star"></i>
+                            {% endfor %}
+                            {% if product.rating % 1 != 0 %}
+                            <i class="fas fa-star-half-alt"></i>
+                            {% endif %}
+                            {% for i in range(5 - product.rating|int - (1 if product.rating % 1 != 0 else 0)) %}
+                            <i class="far fa-star"></i>
+                            {% endfor %}
+                        </div>
+                        <form method="POST" action="{{ url_for('add_to_cart') }}" class="add-to-cart-form">
+                            <input type="hidden" name="product_id" value="{{ product.id }}">
+                            <input type="hidden" name="quantity" value="1">
+                            <button type="submit" class="btn btn-block">Add to Cart</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Pagination -->
+    <nav aria-label="Product pagination" class="mt-5">
+        <ul class="pagination justify-content-center">
+            <li class="page-item disabled">
+                <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+            </li>
+            <li class="page-item active"><a class="page-link" href="#">1</a></li>
+            <li class="page-item"><a class="page-link" href="#">2</a></li>
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <li class="page-item">
+                <a class="page-link" href="#">Next</a>
+            </li>
+        </ul>
+    </nav>
+</div>
+
+<!-- Newsletter Section -->
+<div class="bg-light py-5 mt-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8 text-center">
+                <h3>Subscribe to Our Newsletter</h3>
+                <p class="mb-4">Get the latest updates about new products and special offers.</p>
+                <form class="form-inline justify-content-center">
+                    <div class="form-group mx-sm-3 mb-2">
+                        <label for="newsletter-email" class="sr-only">Email</label>
+                        <input type="email" class="form-control" id="newsletter-email" placeholder="Your Email Address">
+                    </div>
+                    <button type="submit" class="btn mb-2">Subscribe</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Setup add to cart forms
+        const cartForms = document.querySelectorAll('.add-to-cart-form');
+        cartForms.forEach(form => {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const formData = new FormData(form);
+                
+                fetch(form.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Show success message
+                        alert('Product added to cart!');
+                        // Update cart count if available
+                        const cartBadge = document.querySelector('.cart-badge');
+                        if (cartBadge) {
+                            cartBadge.textContent = data.cart_count;
+                            cartBadge.style.display = 'flex';
+                        }
+                    } else {
+                        alert('Error: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred while adding to cart');
+                });
+            });
+        });
+    });
+</script>
+{% endblock %}
