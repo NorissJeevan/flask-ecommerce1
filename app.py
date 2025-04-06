@@ -24,7 +24,7 @@ products = [
         "name": "Tablet PC",
         "price": 1000.99,
         "rating": 4,
-        "image": "power-tab.jpeg",
+        "image": "product1.png",
         "category": "electronics"
     },
     {
@@ -32,7 +32,7 @@ products = [
         "name": "X-box Console",
         "price": 2000.00,
         "rating": 3,
-        "image": "ps4-gaming.jpg",
+        "image": "product2.jpg",
         "category": "gaming"
     },
     {
