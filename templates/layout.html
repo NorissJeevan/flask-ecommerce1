@@ -6,12 +6,14 @@
     <title>{% block title %}Tradello{% endblock %}</title>
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <!-- Custom CSS -->
+    <!-- Common CSS (applied site-wide) -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/common.css') }}">
+    <!-- Page-specific CSS -->
     {% block css %}
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     {% endblock %}
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Recursive:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Recursive:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     {% block head_scripts %}{% endblock %}

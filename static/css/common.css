@@ -1,0 +1,363 @@
+/* 
+ * Tradello E-Commerce - Common Styles
+ * A unified theme for the entire website
+ */
+
+/* Colors */
+:root {
+  --primary-color: #8760e0;
+  --primary-light: #eadfff;
+  --secondary-color: #fff1f1;
+  --main-dark: #333;
+  --main-gray: #4a4a4a;
+  --light-gray: #f8f9fa;
+  --dark-gray: #333;
+  --success-color: #28a745;
+  --warning-color: #ffc107;
+  --danger-color: #dc3545;
+  --info-color: #17a2b8;
+}
+
+/* Reset and General Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--main-dark);
+  background-color: var(--light-gray);
+  margin: 0;
+  padding: 0;
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+  padding-bottom: 50px;
+  padding-right: 0 !important;
+}
+
+/* Header and Navigation */
+.header {
+  background-color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+}
+
+.navbar {
+  display: flex;
+  align-items: center;
+  padding: 0.8rem 1rem;
+  background-color: white;
+}
+
+.navbar-padding {
+  padding-bottom: 0;
+}
+
+nav {
+  flex: 1;
+  text-align: right;
+}
+
+nav ul {
+  display: inline-block;
+  list-style-type: none;
+}
+
+nav ul li {
+  display: inline-block;
+  margin-right: 20px;
+}
+
+nav ul li a {
+  color: var(--main-dark);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+nav ul li a:hover {
+  color: var(--primary-color);
+  text-decoration: none;
+}
+
+.menu-icon {
+  width: 28px;
+  margin-left: 20px;
+  display: none;
+}
+
+/* Logo Styles */
+.logo img {
+  width: 300px;
+  height: 80px;
+  object-fit: contain;
+}
+
+/* Container */
+.container {
+  max-width: 1300px;
+  margin: auto;
+  padding-left: 25px;
+  padding-right: 25px;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+
+.col-2 {
+  flex-basis: 50%;
+  min-width: 300px;
+}
+
+.col-2 img {
+  max-width: 100%;
+  padding: 50px 0;
+}
+
+.col-2 h1 {
+  font-size: 50px;
+  line-height: 60px;
+  margin: 25px 0;
+}
+
+.col-3 {
+  flex-basis: 30%;
+  min-width: 250px;
+  margin-bottom: 30px;
+}
+
+.col-4 {
+  flex-basis: 25%;
+  padding: 10px;
+  min-width: 200px;
+  margin-bottom: 50px;
+  transition: transform 0.5s;
+}
+
+.col-4 img {
+  width: 100%;
+}
+
+/* Buttons */
+.btn {
+  display: inline-block;
+  background: var(--primary-color);
+  color: white;
+  padding: 8px 30px;
+  margin: 30px 0;
+  border-radius: 30px;
+  transition: background 0.5s;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+}
+
+.btn:hover {
+  background: #563d7c;
+  color: white;
+  text-decoration: none;
+}
+
+/* Form Elements */
+.form-control {
+  border-radius: 4px;
+  border: 1px solid #ced4da;
+  padding: 10px 15px;
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+.form-control:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 0.2rem rgba(135, 96, 224, 0.25);
+}
+
+/* Cards */
+.card {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  margin-bottom: 20px;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+.card-img-top {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+.card-body {
+  padding: 20px;
+}
+
+.card-title {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.card-text {
+  color: var(--main-gray);
+  margin-bottom: 15px;
+}
+
+/* Store Badges */
+.store-badges img {
+  max-width: 140px;
+  height: auto;
+  transition: transform 0.3s ease;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin: 10px;
+}
+
+.store-badges img:hover {
+  transform: scale(1.05);
+}
+
+/* Auction Specific Styles */
+.auction-timer {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: var(--danger-color);
+  margin-bottom: 15px;
+  display: inline-block;
+  padding: 8px 15px;
+  background-color: #f8f9fa;
+  border-radius: 4px;
+  border: 1px solid #dee2e6;
+}
+
+.bid-history {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.bid-form {
+  margin-top: 20px;
+  padding: 15px;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  background-color: #f8f9fa;
+}
+
+/* Footer */
+.footer {
+  background-color: var(--main-dark);
+  color: white;
+  padding: 40px 0;
+  margin-top: auto;
+}
+
+.footer h3 {
+  color: white;
+  margin-bottom: 20px;
+  font-size: 18px;
+}
+
+.footer p {
+  color: #ccc;
+}
+
+.footer-col-1, .footer-col-2, .footer-col-3, .footer-col-4 {
+  min-width: 250px;
+  margin-bottom: 20px;
+}
+
+.footer-col-1 {
+  flex-basis: 30%;
+}
+
+.footer-col-2 {
+  flex: 1;
+  text-align: center;
+}
+
+.footer-col-2 img {
+  width: 180px;
+  margin-bottom: 20px;
+}
+
+.footer-col-3, .footer-col-4 {
+  flex-basis: 12%;
+  text-align: center;
+}
+
+.app-logo {
+  margin-top: 20px;
+}
+
+.app-logo img {
+  width: 140px;
+}
+
+.footer hr {
+  border: none;
+  background: #b5b5b5;
+  height: 1px;
+  margin: 20px 0;
+}
+
+.copyright {
+  text-align: center;
+  color: #ccc;
+}
+
+/* Responsive Design */
+@media only screen and (max-width: 800px) {
+  nav ul {
+    position: absolute;
+    top: 70px;
+    left: 0;
+    background: #333;
+    width: 100%;
+    overflow: hidden;
+    transition: max-height 0.5s;
+  }
+  
+  nav ul li {
+    display: block;
+    margin-right: 50px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+  
+  nav ul li a {
+    color: white;
+  }
+  
+  .menu-icon {
+    display: block;
+    cursor: pointer;
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .row {
+    text-align: center;
+  }
+  
+  .col-2, .col-3, .col-4 {
+    flex-basis: 100%;
+  }
+  
+  .logo img {
+    width: 150px;
+    height: 50px;
+  }
+}
