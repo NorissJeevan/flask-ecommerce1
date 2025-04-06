@@ -24,7 +24,7 @@ products = [
         "name": "Tablet PC",
         "price": 1000.99,
         "rating": 4,
-        "image": "product-images/product-1.jpg",
+        "image": "product1.png",
         "category": "electronics"
     },
     {
@@ -32,7 +32,7 @@ products = [
         "name": "X-box Console",
         "price": 2000.00,
         "rating": 3,
-        "image": "product-images/product-2.jpg",
+        "image": "product2.jpg",
         "category": "gaming"
     },
     {
@@ -40,7 +40,7 @@ products = [
         "name": "IPhone X",
         "price": 4999.99,
         "rating": 5,
-        "image": "product-images/product-3.jpg",
+        "image": "product3.png",
         "category": "phones"
     },
     {
@@ -48,7 +48,7 @@ products = [
         "name": "Logitech Super Slim",
         "price": 199.99,
         "rating": 4,
-        "image": "product-images/product-4.jpg",
+        "image": "product4.jpg",
         "category": "accessories"
     },
     {
@@ -56,7 +56,7 @@ products = [
         "name": "Gaming Laptop",
         "price": 7000.99,
         "rating": 4,
-        "image": "product-images/product-1.jpg",
+        "image": "product1.png",
         "category": "laptops"
     },
     {
@@ -64,7 +64,7 @@ products = [
         "name": "Canon 12X Pro Shoot",
         "price": 990.00,
         "rating": 3.5,
-        "image": "product-images/product-2.jpg",
+        "image": "product2.jpg",
         "category": "cameras"
     },
     {
@@ -72,7 +72,7 @@ products = [
         "name": "IPhone SE",
         "price": 4999.99,
         "rating": 3,
-        "image": "product-images/product-3.jpg",
+        "image": "product3.png",
         "category": "phones"
     },
     {
@@ -80,7 +80,7 @@ products = [
         "name": "Samsung Tablet PC",
         "price": 3999.99,
         "rating": 4.5,
-        "image": "product-images/product-4.jpg",
+        "image": "product4.jpg",
         "category": "tablets"
     },
     {
@@ -88,7 +88,7 @@ products = [
         "name": "Apple Imac",
         "price": 7999.99,
         "rating": 4,
-        "image": "product-images/product-1.jpg",
+        "image": "product1.png",
         "category": "desktops"
     },
     {
@@ -96,7 +96,7 @@ products = [
         "name": "USB Type-C Thunderbolt",
         "price": 200.00,
         "rating": 4,
-        "image": "product-images/product-2.jpg",
+        "image": "product2.jpg",
         "category": "accessories"
     },
     {
@@ -104,7 +104,7 @@ products = [
         "name": "Alienware Laptop",
         "price": 7000.99,
         "rating": 4,
-        "image": "product-images/product-3.jpg",
+        "image": "product3.png",
         "category": "laptops"
     },
     {
@@ -112,7 +112,7 @@ products = [
         "name": "Call of Duty MW",
         "price": 1000.99,
         "rating": 4,
-        "image": "product-images/product-4.jpg",
+        "image": "product4.jpg",
         "category": "games"
     },
     {
@@ -120,7 +120,7 @@ products = [
         "name": "Phantom Drone",
         "price": 5999.99,
         "rating": 4,
-        "image": "product-images/product-1.jpg",
+        "image": "product1.png",
         "category": "drones"
     },
     {
@@ -128,7 +128,7 @@ products = [
         "name": "Giant Unicorn Plush",
         "price": 99.99,
         "rating": 5,
-        "image": "product-images/product-2.jpg",
+        "image": "product2.jpg",
         "category": "toys",
         "description": "This graceful unicorn will prance right into any child's collection -- and heart! With its pretty pink mane and tail, both scattered through with shimmering silver strands that catch the light, this enchanting friend is sure to become a new favorite. Additional irresistible details include super-silky plush fur, satin star decorations, beautiful blue eyes, and a soft, shiny horn."
     }
@@ -166,7 +166,7 @@ auctions = [
             "cost": 12.99,
             "estimated_delivery": "3-5 business days"
         },
-        "images": ["product-images/product-1.jpg", "product-images/product-2.jpg", "product-images/product-3.jpg"]
+        "images": ["product1.png", "product2.jpg", "product3.png"]
     }
 ]
 
