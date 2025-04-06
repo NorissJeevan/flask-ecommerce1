@@ -1,9 +1,10 @@
 import os
 import json
 import logging
-from datetime import datetime
-from flask import Flask, render_template, request, redirect, url_for, session, flash
+from datetime import datetime, timedelta
+from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
+from flask_socketio import SocketIO, emit
 
 # Configure logging
 logging.basicConfig(level=logging.DEBUG)
@@ -11,6 +12,9 @@ logging.basicConfig(level=logging.DEBUG)
 # Initialize Flask app
 app = Flask(__name__)
 app.secret_key = os.environ.get("SESSION_SECRET", "dev-key-for-testing")
+
+# Initialize Socket.IO
+socketio = SocketIO(app, cors_allowed_origins="*")
 
 # In-memory data storage
 users = {}
@@ -190,6 +194,14 @@ def product_page():
 
 @app.route('/auctions')
 def auctions_page():
+    # Update auction end times to be in the future for demo purposes
+    current_time = datetime.now()
+    for auction in auctions:
+        if auction['status'] == 'active':
+            # Set end time to 1 hour from now for testing
+            end_time = current_time + timedelta(hours=1)
+            auction['end_time'] = end_time.isoformat()
+    
     return render_template('index-1.html', auctions=auctions)
 
 
@@ -199,6 +211,14 @@ def auction_detail(auction_id):
     if not auction:
         flash('Auction not found', 'error')
         return redirect(url_for('auctions_page'))
+    
+    # Update end time to be in the future for demo purposes
+    if auction['status'] == 'active':
+        # Set end time to 1 hour from now for testing
+        current_time = datetime.now()
+        end_time = current_time + timedelta(hours=1)
+        auction['end_time'] = end_time.isoformat()
+    
     return render_template('index-1.html', auction=auction)
 
 
@@ -350,33 +370,61 @@ def place_bid():
     
     # Check if user is logged in
     if 'user_id' not in session:
-        return json.dumps({'success': False, 'message': 'Please login first'}), 401
+        return jsonify({'success': False, 'message': 'Please login first'}), 401
     
     # Get the auction
     auction = next((a for a in auctions if a['id'] == auction_id), None)
     
     if not auction:
-        return json.dumps({'success': False, 'message': 'Auction not found'}), 404
+        return jsonify({'success': False, 'message': 'Auction not found'}), 404
+    
+    # Check if auction is still active
+    if auction['status'] != 'active':
+        return jsonify({'success': False, 'message': 'This auction has ended'}), 400
     
     # Check if bid is higher than current bid
     if bid_amount <= auction['current_bid']:
-        return json.dumps({'success': False, 'message': 'Bid must be higher than current bid'}), 400
+        return jsonify({'success': False, 'message': 'Bid must be higher than current bid'}), 400
+    
+    # Format the current time
+    current_time = datetime.now()
+    formatted_time = current_time.strftime("%Y-%m-%d %H:%M:%S")
     
     # Update auction
     auction['current_bid'] = bid_amount
     auction['highest_bidder'] = session['user_name']
     auction['bid_count'] += 1
-    auction['bids'].insert(0, {
+    
+    # Create a new bid entry
+    new_bid = {
         'bidder': session['user_name'],
         'amount': bid_amount,
-        'time': datetime.now().isoformat()
+        'time': current_time.isoformat(),
+        'formatted_time': formatted_time
+    }
+    
+    # Add the bid to the auction's bid history
+    auction['bids'].insert(0, new_bid)
+    
+    # Emit a Socket.IO event to notify all clients about the new bid
+    socketio.emit('bid_update', {
+        'auction_id': auction_id,
+        'current_bid': bid_amount,
+        'highest_bidder': session['user_name'],
+        'bid_count': auction['bid_count'],
+        'new_bid': {
+            'bidder': session['user_name'],
+            'amount': bid_amount,
+            'formatted_time': formatted_time
+        }
     })
     
-    return json.dumps({
+    return jsonify({
         'success': True,
         'current_bid': bid_amount,
         'highest_bidder': session['user_name'],
-        'message': 'Bid placed successfully'
+        'message': 'Bid placed successfully',
+        'formatted_time': formatted_time
     })
 
 
@@ -386,17 +434,19 @@ def buy_now():
     
     # Check if user is logged in
     if 'user_id' not in session:
-        return json.dumps({'success': False, 'message': 'Please login first'}), 401
+        return jsonify({'success': False, 'message': 'Please login first'}), 401
     
     # Get the auction
     auction = next((a for a in auctions if a['id'] == auction_id), None)
     
     if not auction:
-        return json.dumps({'success': False, 'message': 'Auction not found'}), 404
+        return jsonify({'success': False, 'message': 'Auction not found'}), 404
+    
+    # Check if auction is still active
+    if auction['status'] != 'active':
+        return jsonify({'success': False, 'message': 'This auction has ended'}), 400
     
     # Process buy now
-    # In a real app, you would process payment and update inventory
-    
     # Add to cart
     if 'cart' not in session:
         session['cart'] = []
@@ -412,7 +462,40 @@ def buy_now():
     # Update auction status
     auction['status'] = 'sold'
     
-    return json.dumps({
-        'success': True,
-        'message': 'Item purchased successfully'
+    # Emit a Socket.IO event to notify all clients that the auction has ended
+    socketio.emit('auction_ended', {
+        'auction_id': auction_id,
+        'status': 'sold',
+        'message': f'This item has been purchased by {session["user_name"]}'
     })
+    
+    return jsonify({
+        'success': True,
+        'message': 'Item purchased successfully',
+        'redirect_url': url_for('view_cart')
+    })
+
+
+# Socket.IO event handlers
+@socketio.on('connect')
+def handle_connect():
+    logging.debug(f"Client connected: {request.sid}")
+
+
+@socketio.on('join')
+def handle_join(data):
+    auction_id = data.get('auction_id')
+    if auction_id:
+        logging.debug(f"Client {request.sid} joined auction {auction_id}")
+        # You could implement rooms here for scaling
+        # For simplicity, we're using global events
+
+
+@socketio.on('disconnect')
+def handle_disconnect():
+    logging.debug(f"Client disconnected: {request.sid}")
+
+
+# Run the application with Socket.IO
+if __name__ == "__main__":
+    socketio.run(app, host="0.0.0.0", port=5000, debug=True)

@@ -7,7 +7,8 @@
 {% endblock %}
 
 {% block head_scripts %}
-<script src="https://cdn.socket.io/4.0.1/socket.io.min.js"></script>
+<script src="https://cdn.socket.io/4.7.2/socket.io.min.js" integrity="sha384-mZLF4UVrpi/QTWPA7BjNPEnkIfRFn4ZEO3Qt/HFklTJBj/gBOV8G3HcKn4NfQblz" crossorigin="anonymous"></script>
+<script src="{{ url_for('static', filename='js/auction-socket.js') }}"></script>
 {% endblock %}
 
 {% block header_content %}{% endblock %}
@@ -61,11 +62,11 @@
                     <div class="row">
                         <div class="col-6">
                             <h6 class="text-muted">Auction Ends In</h6>
-                            <div id="auctionTimer" class="auction-timer">
-                                <span id="days">2</span>d 
-                                <span id="hours">14</span>h 
-                                <span id="minutes">36</span>m 
-                                <span id="seconds">42</span>s
+                            <div id="auctionTimer" class="auction-timer" data-end-time="{{ auction.end_time if auction else '2025-05-31T23:59:59' }}">
+                                <span id="days">0</span>d 
+                                <span id="hours">1</span>h 
+                                <span id="minutes">0</span>m 
+                                <span id="seconds">0</span>s
                             </div>
                         </div>
                         <div class="col-6 text-right">
