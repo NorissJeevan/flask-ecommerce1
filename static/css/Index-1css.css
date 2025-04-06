@@ -9,6 +9,23 @@ body {
     padding: 0;
 }
 
+/* Logo Styles - Make sure the logo remains the proper size */
+.logo img {
+    width: 300px !important;
+    height: 200px !important;
+    max-width: 300px !important;
+    object-fit: contain !important;
+}
+
+/* Store badges specific styles for auction page */
+.store-badges img {
+    max-width: 140px !important;
+    height: auto !important;
+    transition: transform 0.3s ease;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
 /* Header Styling */
 header {
     background: linear-gradient(90deg, #007bff, #6610f2);
