@@ -498,6 +498,24 @@ nav ul li.active a:after {
   padding-left: 5px;
 }
 
+.store-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.store-badges img {
+  max-width: 140px;
+  height: auto;
+  border-radius: 8px;
+  transition: transform 0.3s ease;
+}
+
+.store-badges img:hover {
+  transform: translateY(-5px);
+}
+
 .social-icons {
   display: flex;
   margin-top: 20px;
@@ -604,4 +622,23 @@ nav ul li.active a:after {
     padding: 8px 20px;
     font-size: 14px;
   }
+}
+
+/* Store badges in footer */
+.store-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.store-badges img {
+  max-width: 140px;
+  height: auto;
+  border-radius: 8px;
+  transition: transform 0.3s ease;
+}
+
+.store-badges img:hover {
+  transform: translateY(-5px);
 }
