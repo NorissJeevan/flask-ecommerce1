@@ -34,10 +34,10 @@
             <div id="productCarousel" class="carousel slide" data-ride="carousel">
                 <div class="carousel-inner">
                     <div class="carousel-item active">
-                        <img src="{{ url_for('static', filename='images/product-images/product-1.jpg') }}" class="d-block w-100" alt="Product Image 1">
+                        <img src="{{ url_for('static', filename='images/product1.png') }}" class="d-block w-100" alt="Product Image 1">
                     </div>
                     <div class="carousel-item">
-                        <img src="{{ url_for('static', filename='images/product-images/product-2.jpg') }}" class="d-block w-100" alt="Product Image 2">
+                        <img src="{{ url_for('static', filename='images/product2.jpg') }}" class="d-block w-100" alt="Product Image 2">
                     </div>
                 </div>
                 <a class="carousel-control-prev" href="#productCarousel" role="button" data-slide="prev">
@@ -269,7 +269,7 @@
             <div class="col-md-3 col-6 mb-4">
                 <div class="auction-card">
                     <div class="position-relative">
-                        <img src="{{ url_for('static', filename='images/product-images/product-1.jpg') }}" alt="{{ auction.title }}" class="auction-img">
+                        <img src="{{ url_for('static', filename='images/product1.png') }}" alt="{{ auction.title }}" class="auction-img">
                         <div class="position-absolute p-2" style="bottom: 0; right: 0; background-color: rgba(0,0,0,0.6); color: white; border-radius: 4px 0 0 0;">
                             <i class="fas fa-fire"></i> Hot
                         </div>
@@ -306,7 +306,7 @@
             {% for auction in auctions[4:] %}
             <div class="col-md-3 col-6 mb-4">
                 <div class="auction-card">
-                    <img src="{{ url_for('static', filename='images/product-images/product-2.jpg') }}" alt="{{ auction.title }}" class="auction-img">
+                    <img src="{{ url_for('static', filename='images/product2.jpg') }}" alt="{{ auction.title }}" class="auction-img">
                     <div class="auction-info">
                         <h5 class="auction-title">{{ auction.title }}</h5>
                         <div class="auction-meta">

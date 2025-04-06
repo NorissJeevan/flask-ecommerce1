@@ -107,7 +107,7 @@
             {% for product in products[:4] %}
             <div class="col-md-3 col-6 mb-4">
                 <div class="product-card">
-                    <img src="{{ url_for('static', filename='images/product-images/' + product.image) }}" alt="{{ product.name }}" class="product-img">
+                    <img src="{{ url_for('static', filename='images/' + product.image) }}" alt="{{ product.name }}" class="product-img">
                     <div class="product-info">
                         <h5 class="product-title">{{ product.name }}</h5>
                         <div class="product-price">${{ "%.2f"|format(product.price) }}</div>
@@ -141,7 +141,7 @@
             {% for product in products[4:] %}
             <div class="col-md-3 col-6 mb-4">
                 <div class="product-card">
-                    <img src="{{ url_for('static', filename='images/product-images/' + product.image) }}" alt="{{ product.name }}" class="product-img">
+                    <img src="{{ url_for('static', filename='images/' + product.image) }}" alt="{{ product.name }}" class="product-img">
                     <div class="product-info">
                         <h5 class="product-title">{{ product.name }}</h5>
                         <div class="product-price">${{ "%.2f"|format(product.price) }}</div>
