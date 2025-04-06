@@ -11,7 +11,7 @@
     <!-- Page-specific CSS -->
     {% block css %}{% endblock %}
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Recursive:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     {% block head_scripts %}{% endblock %}
@@ -35,29 +35,19 @@
     <div class="header">
         <div class="container">
             <div class="navbar">
-                <div class="navbar-brand">
-                    <a href="{{ url_for('home') }}" class="logo">
-                        <img src="{{ url_for('static', filename='images/tradello-logo.png') }}" alt="Tradello Logo">
+                <div class="logo">
+                    <a href="{{ url_for('home') }}">
+                        <img src="{{ url_for('static', filename='images/tradello-logo.png') }}" alt="Tradello Logo" width="125px">
                     </a>
                 </div>
-                <nav id="main-nav">
-                    <ul>
-                        <li class="{{ 'active' if request.endpoint == 'home' }}">
-                            <a href="{{ url_for('home') }}">Home</a>
-                        </li>
-                        <li class="{{ 'active' if request.endpoint == 'product_page' }}">
-                            <a href="{{ url_for('product_page') }}">Products</a>
-                        </li>
-                        <li class="{{ 'active' if request.endpoint == 'auctions_page' }}">
-                            <a href="{{ url_for('auctions_page') }}">Auctions</a>
-                        </li>
-                        <li class="{{ 'active' if request.endpoint == 'about' }}">
-                            <a href="{{ url_for('about') }}">About</a>
-                        </li>
-                        <li class="{{ 'active' if request.endpoint == 'contact' }}">
-                            <a href="{{ url_for('contact') }}">Contact</a>
-                        </li>
-                        <li class="{{ 'active' if request.endpoint == 'register' or request.endpoint == 'login' }}">
+                <nav>
+                    <ul id="MenuItems">
+                        <li><a href="{{ url_for('home') }}">Home</a></li>
+                        <li><a href="{{ url_for('product_page') }}">Products</a></li>
+                        <li><a href="{{ url_for('auctions_page') }}">Auctions</a></li>
+                        <li><a href="{{ url_for('about') }}">About</a></li>
+                        <li><a href="{{ url_for('contact') }}">Contact</a></li>
+                        <li>
                             <a href="{{ url_for('register') }}">
                                 {% if 'user' in session %}
                                     Account
@@ -68,23 +58,19 @@
                         </li>
                     </ul>
                 </nav>
-                <div class="nav-icons">
-                    <a href="{{ url_for('view_cart') }}" class="cart-icon position-relative">
-                        <i class="fas fa-shopping-cart"></i>
-                        {% if session.get('cart') %}
-                            <span class="cart-badge">{{ session['cart']|length }}</span>
-                        {% endif %}
-                    </a>
-                    <button id="menu-toggle" class="menu-toggle">
-                        <i class="fas fa-bars"></i>
-                    </button>
-                </div>
+                <a href="{{ url_for('view_cart') }}" class="cart-img">
+                    <img src="{{ url_for('static', filename='images/cart.png') }}" width="30px" height="30px">
+                    {% if session.get('cart') %}
+                        <span class="badge badge-danger">{{ session['cart']|length }}</span>
+                    {% endif %}
+                </a>
+                <img src="{{ url_for('static', filename='images/menu.png') }}" class="menu-icon" onclick="menutoggle()">
             </div>
+            
+            <!-- Page-specific header content -->
+            {% block header_content %}{% endblock %}
         </div>
     </div>
-
-    <!-- Page-specific header content -->
-    {% block header_content %}{% endblock %}
 
     <!-- Main Content -->
     <main>
@@ -95,46 +81,41 @@
     <div class="footer">
         <div class="container">
             <div class="row">
-                <div class="col-md-3 footer-col">
-                    <h3>Tradello</h3>
-                    <p>Your premium online marketplace for the best products and exciting auctions.</p>
-                    <div class="social-icons">
-                        <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
-                        <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
-                        <a href="#" class="social-icon"><i class="fab fa-youtube"></i></a>
+                <div class="footer-col-1">
+                    <h3>Download Our App</h3>
+                    <p>Download App for Android and iOS mobile phone.</p>
+                    <div class="app-logo">
+                        <img src="{{ url_for('static', filename='images/play-store.png') }}" alt="Play Store">
+                        <img src="{{ url_for('static', filename='images/app-store.png') }}" alt="App Store">
                     </div>
                 </div>
-                <div class="col-md-3 footer-col">
-                    <h3>Shop</h3>
-                    <ul class="footer-links">
+                <div class="footer-col-2">
+                    <img src="{{ url_for('static', filename='images/tradello-logo-white.png') }}" alt="Tradello Logo">
+                    <p>Our Purpose Is To Sustainably Make the Pleasure and Benefits of Shopping Accessible to Many.</p>
+                </div>
+                <div class="footer-col-3">
+                    <h3>Useful Links</h3>
+                    <ul>
                         <li><a href="{{ url_for('product_page') }}">All Products</a></li>
                         <li><a href="{{ url_for('auctions_page') }}">Auctions</a></li>
-                        <li><a href="#">Deal of the Day</a></li>
-                        <li><a href="#">New Arrivals</a></li>
+                        <li><a href="#">Coupons</a></li>
+                        <li><a href="#">Blog Post</a></li>
+                        <li><a href="#">Return Policy</a></li>
+                        <li><a href="#">Join Affiliate</a></li>
                     </ul>
                 </div>
-                <div class="col-md-3 footer-col">
-                    <h3>Customer Service</h3>
-                    <ul class="footer-links">
-                        <li><a href="{{ url_for('contact') }}">Contact Us</a></li>
-                        <li><a href="#">FAQ</a></li>
-                        <li><a href="#">Shipping & Returns</a></li>
-                        <li><a href="#">Privacy Policy</a></li>
+                <div class="footer-col-4">
+                    <h3>Follow Us</h3>
+                    <ul>
+                        <li><a href="#">Facebook</a></li>
+                        <li><a href="#">Twitter</a></li>
+                        <li><a href="#">Instagram</a></li>
+                        <li><a href="#">YouTube</a></li>
                     </ul>
                 </div>
-                <div class="col-md-3 footer-col">
-                    <h3>Download Our App</h3>
-                    <p>Shop on the go with our mobile app.</p>
-                    <div class="store-badges">
-                        <a href="#"><img src="{{ url_for('static', filename='images/app-store.png') }}" alt="App Store"></a>
-                        <a href="#"><img src="{{ url_for('static', filename='images/play-store.png') }}" alt="Play Store"></a>
-                    </div>
-                </div>
             </div>
-            <div class="footer-bottom">
-                <p>&copy; 2025 Tradello. All Rights Reserved.</p>
-            </div>
+            <hr>
+            <p class="copyright">&copy; 2025 Tradello. All Rights Reserved.</p>
         </div>
     </div>
 
@@ -146,10 +127,14 @@
     <!-- Custom JavaScript -->
     <script>
         // Toggle mobile menu
-        document.getElementById('menu-toggle').addEventListener('click', function() {
-            const nav = document.getElementById('main-nav');
-            nav.classList.toggle('active');
-        });
+        function menutoggle() {
+            var MenuItems = document.getElementById("MenuItems");
+            if (MenuItems.style.maxHeight == "0px") {
+                MenuItems.style.maxHeight = "200px";
+            } else {
+                MenuItems.style.maxHeight = "0px";
+            }
+        }
     </script>
     {% block scripts %}{% endblock %}
 </body>
