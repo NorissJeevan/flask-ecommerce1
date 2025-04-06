@@ -1,3 +1,8 @@
+{% extends 'layout.html' %}
+
+{% block title %}Tradello - Contact Us{% endblock %}
+
+{% block css %}
 <style>
 body{margin:0;padding:0}
 #ss-form input:focus ~ label,
@@ -137,71 +142,88 @@ body{margin:0;padding:0}
 }
 }
 </style>
+{% endblock %}
 
-<script type="text/javascript">
-var submitted=false;
-var fadeEffect=function(){
- return{
-  init:function(id, flag, target){
-   this.elem = document.getElementById(id);
-   clearInterval(this.elem.si);
-   this.target = target ? target : flag ? 100 : 0;
-   this.flag = flag || -1;
-   this.alpha = this.elem.style.opacity ? parseFloat(this.elem.style.opacity) * 100 : 0;
-   this.elem.si = setInterval(function(){fadeEffect.tween()}, 20);
-  },
-  tween:function(){
-   if(this.alpha == this.target){
-    clearInterval(this.elem.si);
-   }else{
-    var value = Math.round(this.alpha + ((this.target - this.alpha) * .05)) + (1 * this.flag);
-    this.elem.style.opacity = value / 100;
-    this.elem.style.filter = 'alpha(opacity=' + value + ')';
-    this.alpha = value
-   }
-  }
- }
-}();
-function myFunction() {
-    location.reload();
-}
-</script>
-<iframe id="hidden_iframe" name="hidden_iframe" onload="if(submitted){);}" style="display: none;"></iframe>
-            <form action="https://docs.google.com/forms/d/e/1FAIpQLSf0qJrZSVFIhFuQ5jDtprluFI1jRzhYlSxRnTL_Zf3KkoN5hw/formResponse" id="ss-form" method="POST" onsubmit="fadeEffect.init('fade', 1);document.getElementById('fade').style.display = 'block'" target="hidden_iframe">
-          <div class="styled-input">
-                        <div class="styled-input-in">
-                <input type="text" aria-label="Name" name="entry.2005620554" value="" id="entry.2005620554" dir="auto" title="" required="required">
-                                <label>Name</label>
-                                <span class="span1"></span><span class="span2"></span>
-            </div>
-          </div>
-          <div class="styled-input">
-                        <div class="styled-input-in">
-                <input type="email" aria-label="Email" name="entry.1045781291" value="" id="entry.1045781291" dir="auto" title="Must be a valid email address" required="required">
-                                <label>Email</label>
-                                <span class="span1"></span><span class="span2"></span>
-            </div>
-          </div>
-          <div class="styled-input wide">
-                        <div class="styled-input-in">
-                <textarea aria-label="Comments" name="entry.839337160" rows="8" cols="0" id="entry.839337160" dir="auto" aria-required="true" required="required"></textarea>
-                                <label>Message</label>
-                                <span class="span1"></span><span class="span2"></span>
-            </div>
-          </div>
-          <input name="draftResponse" type="hidden" value="[,,&quot;3698745647546576630&quot;]">
-                    <input name="pageHistory" type="hidden" value="0">
-                    <input name="fbzx" type="hidden" value="3698745647546576630">
-          <button type="submit" name="submit" class="btn btn-default">Send</button>
-          </div>
-      </form>
+{% block content %}
+<div class="container my-5">
+    <div class="row">
+        <div class="col-12">
+            <h2 class="text-center mb-4">Contact Us</h2>
+            <p class="text-center mb-5">Have questions, feedback, or need assistance? We're here to help! Fill out the form below and our team will get back to you as soon as possible.</p>
+            
+            <script type="text/javascript">
+            var submitted=false;
+            var fadeEffect=function(){
+             return{
+              init:function(id, flag, target){
+               this.elem = document.getElementById(id);
+               clearInterval(this.elem.si);
+               this.target = target ? target : flag ? 100 : 0;
+               this.flag = flag || -1;
+               this.alpha = this.elem.style.opacity ? parseFloat(this.elem.style.opacity) * 100 : 0;
+               this.elem.si = setInterval(function(){fadeEffect.tween()}, 20);
+              },
+              tween:function(){
+               if(this.alpha == this.target){
+                clearInterval(this.elem.si);
+               }else{
+                var value = Math.round(this.alpha + ((this.target - this.alpha) * .05)) + (1 * this.flag);
+                this.elem.style.opacity = value / 100;
+                this.elem.style.filter = 'alpha(opacity=' + value + ')';
+                this.alpha = value
+               }
+              }
+             }
+            }();
+            function myFunction() {
+                location.reload();
+            }
+            </script>
+            <iframe id="hidden_iframe" name="hidden_iframe" onload="if(submitted){fadeEffect.init('fade', 1);document.getElementById('fade').style.display = 'block';}" style="display: none;"></iframe>
+            
+            <form action="{{ url_for('contact') }}" id="ss-form" method="POST" onsubmit="submitted=true;fadeEffect.init('fade', 1);document.getElementById('fade').style.display = 'block'">
+                <div class="styled-input">
+                    <div class="styled-input-in">
+                        <input type="text" aria-label="Name" name="entry.2005620554" value="" id="entry.2005620554" dir="auto" title="" required="required">
+                        <label>Name</label>
+                        <span class="span1"></span><span class="span2"></span>
+                    </div>
+                </div>
+                <div class="styled-input">
+                    <div class="styled-input-in">
+                        <input type="email" aria-label="Email" name="entry.1045781291" value="" id="entry.1045781291" dir="auto" title="Must be a valid email address" required="required">
+                        <label>Email</label>
+                        <span class="span1"></span><span class="span2"></span>
+                    </div>
+                </div>
+                <div class="styled-input wide">
+                    <div class="styled-input-in">
+                        <textarea aria-label="Comments" name="entry.839337160" rows="8" cols="0" id="entry.839337160" dir="auto" aria-required="true" required="required"></textarea>
+                        <label>Message</label>
+                        <span class="span1"></span><span class="span2"></span>
+                    </div>
+                </div>
+                <button type="submit" name="submit" class="btn btn-default">Send</button>
+            </form>
+            
             <div id="fade">
-<div class="thanks_layout">
-<div class="thanks_message">
-<img alt="Thumb" height="48" width="48" src="https://4.bp.blogspot.com/-rY5km74yj_I/V1ItqrbspBI/AAAAAAAAmxA/SK-aLPTjyuo8uiSYylRJ4tLslk2LJ581QCLcB/s1600/ic_thumb_up_black_24dp_2x.png" />
-        <h2>Form submitted successfully</h2>
-        <div>Jika tidak ada halangan dan kesibukan lainnya, admin akan langsung merespon pesan yang Anda kirimkan.</div>
-        <div class="close"><a href="javascript:void(0)" onclick="document.getElementById('fade').style.display = 'none' ;myFunction()" title="Close">&times;</a></div>
+                <div class="thanks_layout">
+                    <div class="thanks_message">
+                        <img alt="Thumb" height="48" width="48" src="https://4.bp.blogspot.com/-rY5km74yj_I/V1ItqrbspBI/AAAAAAAAmxA/SK-aLPTjyuo8uiSYylRJ4tLslk2LJ581QCLcB/s1600/ic_thumb_up_black_24dp_2x.png" />
+                        <h2>Form submitted successfully</h2>
+                        <div>We'll respond to your message as soon as possible.</div>
+                        <div class="close"><a href="javascript:void(0)" onclick="document.getElementById('fade').style.display = 'none' ;myFunction()" title="Close">&times;</a></div>
+                    </div>
+                </div>
+            </div>
+            
+            {% if submitted %}
+            <script>
+                fadeEffect.init('fade', 1);
+                document.getElementById('fade').style.display = 'block';
+            </script>
+            {% endif %}
+        </div>
+    </div>
 </div>
-</div>
-</div>
+{% endblock %}

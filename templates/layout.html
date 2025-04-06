@@ -59,7 +59,7 @@
                     </ul>
                 </nav>
                 <a href="{{ url_for('view_cart') }}" class="cart-img">
-                    <img src="{{ url_for('static', filename='images/cart.png') }}" width="30px" height="30px">
+                    <img src="{{ url_for('static', filename='images/cart.svg') }}" width="30px" height="30px">
                     {% if session.get('cart') %}
                         <span class="badge badge-danger">{{ session['cart']|length }}</span>
                     {% endif %}
@@ -85,8 +85,8 @@
                     <h3>Download Our App</h3>
                     <p>Download App for Android and iOS mobile phone.</p>
                     <div class="store-badges">
-                        <img src="{{ url_for('static', filename='images/play-store.png') }}" alt="Play Store">
-                        <img src="{{ url_for('static', filename='images/app-store.png') }}" alt="App Store">
+                        <img src="{{ url_for('static', filename='images/store-badges/play-store.png') }}" alt="Play Store">
+                        <img src="{{ url_for('static', filename='images/store-badges/app-store.png') }}" alt="App Store">
                     </div>
                 </div>
                 <div class="footer-col-2">

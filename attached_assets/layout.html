@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Tradello{% endblock %}</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Custom CSS -->
+    {% block css %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    {% endblock %}
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Recursive:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    {% block head_scripts %}{% endblock %}
+</head>
+<body>
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <!-- Header/Navbar -->
+    <div class="header">
+        <div class="container">
+            <div class="navbar">
+                <div class="logo">
+                    <a href="{{ url_for('home') }}">
+                        <img src="{{ url_for('static', filename='images/logo.png') }}" width="300" height="200" alt="logo-image">
+                    </a>
+                </div>
+                <nav>
+                    <ul id="menu-items">
+                        <li><a href="{{ url_for('home') }}">Home</a></li>
+                        <li><a href="{{ url_for('product_page') }}">Products</a></li>
+                        <li><a href="{{ url_for('about') }}">About</a></li>
+                        <li><a href="{{ url_for('contact') }}">Contact</a></li>
+                        <li><a href="{{ url_for('register') }}">Account</a></li>
+                        <li><a href="{{ url_for('auctions_page') }}">Auctions</a></li>
+                    </ul>
+                </nav>
+                <a href="{{ url_for('view_cart') }}">
+                    <img src="{{ url_for('static', filename='images/cart.svg') }}" alt="cart" width="30px" height="30px" class="cart-img">
+                    <span id="cartItems" class="badge badge-danger">{{ session.get('cart', [])|length }}</span>
+                </a>
+                <img src="{{ url_for('static', filename='images/menu.png') }}" alt="menu" width="30px" height="30px" class="menu-icon" onclick="menutoggle()">
+            </div>
+            
+            {% block header_content %}{% endblock %}
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    {% block content %}{% endblock %}
+
+    <!-- Footer -->
+    <div class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="footer-col-1">
+                    <h3>Download Our App</h3>
+                    <p>Download App for Android and iOS mobile phone.</p>
+                    <div class="store-badges">
+                        <a href="#">
+                            <img src="{{ url_for('static', filename='images/play-store.png') }}" alt="Google Play Store">
+                        </a>
+                        <a href="#">
+                            <img src="{{ url_for('static', filename='images/app-store.png') }}" alt="Apple App Store">
+                        </a>
+                    </div>
+                </div>
+                <div class="footer-col-2">
+                    <img src="{{ url_for('static', filename='images/logo-white.png') }}" alt="logo-white">
+                    <p>Our Purpose Is To Sustainably Make the Pleasure and Benefits of Electronics Accessible to Many.</p>
+                </div>
+                <div class="footer-col-3">
+                    <h3>Useful Links</h3>
+                    <ul>
+                        <li>Coupons</li>
+                        <li>Blog Post</li>
+                        <li>Return Policy</li>
+                        <li>Join Affiliate</li>
+                    </ul>
+                </div>
+                <div class="footer-col-4">
+                    <h3>Follow Us</h3>
+                    <ul>
+                        <li><i class="fa fa-facebook-square"></i> Facebook</li>
+                        <li><i class="fa fa-twitter-square"></i> Twitter</li>
+                        <li><i class="fa fa-instagram"></i> Instagram</li>
+                        <li><i class="fa fa-youtube-square"></i> YouTube</li>
+                    </ul>
+                </div>
+            </div>
+            <hr>
+            <p class="copyright">Copyright &copy; 2023 - Tradello</p>
+        </div>
+    </div>
+
+    <!-- jQuery, Popper.js, and Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    
+    <!-- Firebase (for compatibility with original code) -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
+    <script src="{{ url_for('static', filename='js/firebase-config.js') }}"></script>
+    
+    <!-- Custom JS -->
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>
