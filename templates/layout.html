@@ -64,7 +64,7 @@
                         <span class="badge badge-danger">{{ session['cart']|length }}</span>
                     {% endif %}
                 </a>
-                <img src="{{ url_for('static', filename='images/menu.png') }}" class="menu-icon" onclick="menutoggle()">
+                <img src="{{ url_for('static', filename='images/menu.png') }}" width="40" height="40" class="menu-icon" onclick="menutoggle()">
             </div>
             
             <!-- Page-specific header content -->
@@ -85,12 +85,12 @@
                     <h3>Download Our App</h3>
                     <p>Download App for Android and iOS mobile phone.</p>
                     <div class="store-badges">
-                        <img src="{{ url_for('static', filename='images/store-badges/play-store.png') }}" alt="Play Store">
-                        <img src="{{ url_for('static', filename='images/store-badges/app-store.png') }}" alt="App Store">
+                        <img src="{{ url_for('static', filename='images/store-badges/play-store.png') }}"width="60" height="80"  alt="Play Store">
+                        <img src="{{ url_for('static', filename='images/store-badges/app-store.png') }}"  width="60" height="80" alt="App Store">
                     </div>
                 </div>
                 <div class="footer-col-2">
-                    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Tradello Logo">
+                    <img src="{{ url_for('static', filename='images/logo-white.png') }}" alt="Tradello Logo">
                     <p>Our Purpose Is To Sustainably Make the Pleasure and Benefits of Shopping Accessible to Many.</p>
                 </div>
                 <div class="footer-col-3">
