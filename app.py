@@ -305,6 +305,68 @@ def logout():
     flash('You have been logged out', 'info')
     return redirect(url_for('home'))
 
+@app.route('/dashboard')
+def dashboard():
+    if 'user_id' not in session:
+        flash('Please login first', 'error')
+        return redirect(url_for('login'))
+    
+    user_id = session['user_id']
+    user = users.get(user_id)
+    
+    if not user:
+        flash('User not found', 'error')
+        return redirect(url_for('home'))
+    
+    # Get user's orders from the in-memory storage
+    orders = user.get('orders', [])
+    addresses = user.get('addresses', [])
+    wishlist = user.get('wishlist', [])
+    
+    return render_template('dashboard.html', 
+                         user=user,
+                         orders=orders,
+                         addresses=addresses,
+                         wishlist=wishlist)
+
+@app.route('/add_address', methods=['POST'])
+def add_address():
+    if 'user_id' not in session:
+        return jsonify({'success': False, 'message': 'Please login first'}), 401
+    
+    address = {
+        'street': request.form.get('street'),
+        'city': request.form.get('city'),
+        'state': request.form.get('state'),
+        'zip': request.form.get('zip')
+    }
+    
+    user_id = session['user_id']
+    if user_id in users:
+        if 'addresses' not in users[user_id]:
+            users[user_id]['addresses'] = []
+        users[user_id]['addresses'].append(address)
+        
+    return jsonify({'success': True, 'message': 'Address added successfully'})
+
+@app.route('/add_to_wishlist/<int:product_id>')
+def add_to_wishlist(product_id):
+    if 'user_id' not in session:
+        return jsonify({'success': False, 'message': 'Please login first'}), 401
+    
+    product = next((p for p in products if p['id'] == product_id), None)
+    if not product:
+        return jsonify({'success': False, 'message': 'Product not found'}), 404
+    
+    user_id = session['user_id']
+    if user_id in users:
+        if 'wishlist' not in users[user_id]:
+            users[user_id]['wishlist'] = []
+        if product not in users[user_id]['wishlist']:
+            users[user_id]['wishlist'].append(product)
+    
+    return jsonify({'success': True, 'message': 'Added to wishlist'})
+
 
 @app.route('/add_to_cart', methods=['POST'])
 def add_to_cart():

@@ -5,6 +5,9 @@ class User:
         self.email = email
         self.password_hash = password_hash
         self.cart = []
+        self.orders = []
+        self.addresses = []
+        self.wishlist = []
 
 class Product:
     def __init__(self, id, name, price, rating, image, category, description=None):
