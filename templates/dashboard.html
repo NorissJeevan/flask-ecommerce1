@@ -12,10 +12,41 @@
                 <div class="card-header">
                     <h4>Profile</h4>
                 </div>
-                <div class="card-body">
+                <div class="card-body text-center">
+                    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Profile Logo" class="img-fluid mb-3" style="width: 100px;">
                     <p><strong>Name:</strong> {{ user.name }}</p>
                     <p><strong>Email:</strong> {{ user.email }}</p>
+                    <button class="btn btn-primary mt-2" data-toggle="modal" data-target="#editProfileModal">
+                        <i class="fas fa-edit"></i> Edit Profile
+                    </button>
                 </div>
+
+<!-- Edit Profile Modal -->
+<div class="modal fade" id="editProfileModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit Profile</h5>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="profileForm" action="{{ url_for('update_profile') }}" method="POST">
+                    <div class="form-group">
+                        <label>Name</label>
+                        <input type="text" class="form-control" name="name" value="{{ user.name }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" class="form-control" name="email" value="{{ user.email }}" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
             </div>
         </div>
 

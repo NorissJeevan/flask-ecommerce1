@@ -305,6 +305,24 @@ def logout():
     flash('You have been logged out', 'info')
     return redirect(url_for('home'))
 
+@app.route('/update_profile', methods=['POST'])
+def update_profile():
+    if 'user_id' not in session:
+        flash('Please login first', 'error')
+        return redirect(url_for('login'))
+    
+    user_id = session['user_id']
+    if user_id in users:
+        users[user_id]['name'] = request.form.get('name')
+        users[user_id]['email'] = request.form.get('email')
+        session['user_name'] = request.form.get('name')
+        session['user_email'] = request.form.get('email')
+        flash('Profile updated successfully', 'success')
+    else:
+        flash('User not found', 'error')
+    
+    return redirect(url_for('dashboard'))
+
 @app.route('/dashboard')
 def dashboard():
     if 'user_id' not in session:
