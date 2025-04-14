@@ -166,7 +166,69 @@ auctions = [
             "cost": 12.99,
             "estimated_delivery": "3-5 business days"
         },
-        "images": ["iphone.jpg", "camera.jpg", "webcam.jpg"]
+        "images": ["iphone.jpg", "iphonex-phone.jpg", "iphone9-phone.jpg"]
+    },
+    {
+        "id": 2,
+        "title": "PS5 Gaming Console Bundle",
+        "description": "Brand new PS5 bundle with extra controller and 3 games included.",
+        "starting_bid": 399.99,
+        "current_bid": 455.00,
+        "buy_now_price": 599.99,
+        "highest_bidder": "game_master",
+        "end_time": "2023-12-30T23:59:59",
+        "seller": "GameStop Official",
+        "seller_rating": 4.8,
+        "status": "active",
+        "bid_count": 8,
+        "bids": [
+            {"bidder": "game_master", "amount": 455.00, "time": "2023-12-15T10:30:00"}
+        ],
+        "details": "Brand new PlayStation 5 bundle including an extra DualSense controller and 3 popular games. Full manufacturer warranty included.",
+        "specs": {
+            "Model": "PlayStation 5",
+            "Storage": "1TB",
+            "Color": "White",
+            "Includes": "2 Controllers, 3 Games",
+            "Condition": "New"
+        },
+        "shipping": {
+            "method": "Express Shipping",
+            "cost": 24.99,
+            "estimated_delivery": "1-2 business days"
+        },
+        "images": ["ps5-gaming.jpg", "ps4-gaming.jpg", "ps4-headset.jpg"]
+    },
+    {
+        "id": 3,
+        "title": "Canon EOS R5 Camera",
+        "description": "Professional mirrorless camera with 45MP full-frame sensor.",
+        "starting_bid": 2500.00,
+        "current_bid": 2650.00,
+        "buy_now_price": 3299.99,
+        "highest_bidder": "photo_pro",
+        "end_time": "2023-12-29T23:59:59",
+        "seller": "CameraWorld",
+        "seller_rating": 4.9,
+        "status": "active",
+        "bid_count": 5,
+        "bids": [
+            {"bidder": "photo_pro", "amount": 2650.00, "time": "2023-12-15T09:15:00"}
+        ],
+        "details": "Professional-grade Canon EOS R5 mirrorless camera. Includes original box, battery, charger, and strap. Perfect for professional photography and videography.",
+        "specs": {
+            "Model": "Canon EOS R5",
+            "Sensor": "45MP Full-Frame",
+            "Video": "8K RAW",
+            "Condition": "New",
+            "Warranty": "1 Year Canon Warranty"
+        },
+        "shipping": {
+            "method": "Insured Shipping",
+            "cost": 35.99,
+            "estimated_delivery": "2-3 business days"
+        },
+        "images": ["canon-cam.jpg", "niko-cam.jpg", "camera.jpg"]
     }
 ]
 
