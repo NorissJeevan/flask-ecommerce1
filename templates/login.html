@@ -98,7 +98,7 @@
                     </div>
                     
                     <form action="{{ url_for('login') }}" method="post">
-                        <div class="mb-3 input-icon-group">
+                        <div class="mb-4 input-icon-group">
                             <span class="input-icon">
                                 <i class="fas fa-envelope"></i>
                             </span>
@@ -110,9 +110,10 @@
                                 <i class="fas fa-lock"></i>
                             </span>
                             <input type="password" class="form-control input-with-icon" name="loginPassword" id="loginPassword" required placeholder="Password">
+                            <small class="form-text text-muted ms-2">Password must be at least 8 characters long</small>
                         </div>
                         
-                        <button type="submit" class="btn btn-login shadow mb-4">Sign In</button>
+                        <button type="submit" class="btn btn-login w-100 py-3 rounded-pill shadow-sm mb-4">Sign In</button>
                         
                         <p class="text-center mb-0">
                             Don't have an account? <a href="{{ url_for('register') }}" class="text-primary fw-bold">Register</a>

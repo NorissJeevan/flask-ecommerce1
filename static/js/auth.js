@@ -2,10 +2,43 @@
  * Auth.js - Handles authentication functionality
  */
 
-// Check if user is logged in
+// Form validation functions
+function validateEmail(email) {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(email.toLowerCase());
+}
+
+function validatePassword(password) {
+    return password.length >= 8;
+}
+
+// Check if user is logged in and handle form validation
 document.addEventListener('DOMContentLoaded', function() {
-    // Check if there's a login form on the page
-    const loginForm = document.getElementById('registerForm');
+    // Handle login form
+    const loginForm = document.getElementById('loginForm');
+    if (loginForm) {
+        loginForm.addEventListener('submit', function(e) {
+            const email = document.getElementById('emailAddress');
+            const password = document.getElementById('loginPassword');
+            
+            if (!validateEmail(email.value)) {
+                e.preventDefault();
+                alert('Please enter a valid email address');
+                email.focus();
+                return false;
+            }
+            
+            if (!validatePassword(password.value)) {
+                e.preventDefault();
+                alert('Password must be at least 8 characters long');
+                password.focus();
+                return false;
+            }
+        });
+    }
+    
+    // Handle register form
+    const registerForm = document.getElementById('registerForm');
     
     if (loginForm) {
         loginForm.addEventListener('submit', function(e) {
