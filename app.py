@@ -6,10 +6,21 @@ from flask import Flask, render_template, request, redirect, url_for, session, f
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_socketio import SocketIO, emit
 from flask_sqlalchemy import SQLAlchemy
-from models import User
+import logging
 
-# Initialize SQLAlchemy
-db = SQLAlchemy()
+# Initialize Flask app
+app = Flask(__name__)
+app.secret_key = os.environ.get("SESSION_SECRET", "dev-key-for-testing")
+
+# Configure SQLite database
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///ecommerce.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+# Initialize SQLAlchemy with app
+db = SQLAlchemy(app)
+
+# Import models after db initialization
+from models import User, Product, Auction
 
 # Configure logging
 logging.basicConfig(level=logging.DEBUG)
