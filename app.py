@@ -402,8 +402,9 @@ def login():
             return redirect(url_for('home'))
         else:
             flash('Invalid email or password', 'error')
+            return render_template('login.html')
     
-    return render_template('register.html')
+    return render_template('login.html')
 
 
 @app.route('/logout')
