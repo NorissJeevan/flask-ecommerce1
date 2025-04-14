@@ -77,6 +77,16 @@
                     <div class="text-center mb-4">
                         <h2 class="fw-bold mb-1">Welcome Back!</h2>
                         <p class="text-muted">Sign in to continue</p>
+                        {% with messages = get_flashed_messages(with_categories=true) %}
+                            {% if messages %}
+                                {% for category, message in messages %}
+                                    <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                                        {{ message }}
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+                        {% endwith %}
                     </div>
                     
                     <div class="social-login mb-4">

@@ -392,17 +392,22 @@ def login():
         
         user = get_user_by_email(email)
         
-        if user and check_password_hash(user['password_hash'], password):
-            session['user_id'] = user['id']
-            session['user_email'] = user['email']
-            session['user_name'] = user['name']
-            session['cart'] = user.get('cart', [])
-            
-            flash('Login successful!', 'success')
-            return redirect(url_for('home'))
-        else:
-            flash('Invalid email or password', 'error')
+        if not user:
+            flash('Email address not found', 'error')
             return render_template('login.html')
+            
+        if not check_password_hash(user['password_hash'], password):
+            flash('Incorrect password', 'error')
+            return render_template('login.html')
+            
+        # Login successful
+        session['user_id'] = user['id']
+        session['user_email'] = user['email']
+        session['user_name'] = user['name']
+        session['cart'] = user.get('cart', [])
+        
+        flash('Login successful!', 'success')
+        return redirect(url_for('home'))
     
     return render_template('login.html')
 
