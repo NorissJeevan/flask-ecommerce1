@@ -44,15 +44,40 @@ function setupEventListeners() {
  * Toggle the mobile menu
  */
 function menutoggle() {
-    const menuItems = document.getElementById("menu-items");
+    const menuItems = document.getElementById("MenuItems");
     if (menuItems) {
-        if (menuItems.style.maxHeight) {
-            menuItems.style.maxHeight = null;
-        } else {
-            menuItems.style.maxHeight = "200px";
-        }
+        menuItems.classList.toggle('active');
+        document.body.style.overflow = menuItems.classList.contains('active') ? 'hidden' : '';
     }
 }
+
+// Close menu when clicking outside
+document.addEventListener('click', function(event) {
+    const menuItems = document.getElementById("MenuItems");
+    const menuIcon = document.querySelector('.menu-icon');
+    
+    if (menuItems && menuItems.classList.contains('active')) {
+        if (!menuItems.contains(event.target) && !menuIcon.contains(event.target)) {
+            menuItems.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+    }
+});
+
+// Add touch support for product cards
+document.addEventListener('DOMContentLoaded', function() {
+    const productCards = document.querySelectorAll('.product-card');
+    
+    productCards.forEach(card => {
+        card.addEventListener('touchstart', function() {
+            this.style.transform = 'scale(0.98)';
+        });
+        
+        card.addEventListener('touchend', function() {
+            this.style.transform = 'scale(1)';
+        });
+    });
+});
 
 /**
  * Setup the add to cart forms
