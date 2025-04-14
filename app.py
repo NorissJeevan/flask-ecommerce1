@@ -189,7 +189,53 @@ def home():
 
 @app.route('/products')
 def product_page():
-    return render_template('index2.html', products=products)
+    page = request.args.get('page', 1, type=int)
+    sort_by = request.args.get('sort_by', 'newest')
+    category = request.args.get('category', 'all')
+    price_range = request.args.get('price_range', 'all')
+    
+    # Filter products
+    filtered_products = products.copy()
+    
+    # Apply category filter
+    if category.lower() != 'all':
+        filtered_products = [p for p in filtered_products if p['category'].lower() == category.lower()]
+    
+    # Apply price range filter
+    if price_range != 'all':
+        price_ranges = {
+            'under_50': (0, 50),
+            '50_100': (50, 100),
+            '100_500': (100, 500),
+            'over_500': (500, float('inf'))
+        }
+        if price_range in price_ranges:
+            min_price, max_price = price_ranges[price_range]
+            filtered_products = [p for p in filtered_products if min_price <= p['price'] <= max_price]
+    
+    # Apply sorting
+    if sort_by == 'price_low_high':
+        filtered_products.sort(key=lambda x: x['price'])
+    elif sort_by == 'price_high_low':
+        filtered_products.sort(key=lambda x: x['price'], reverse=True)
+    elif sort_by == 'popularity':
+        filtered_products.sort(key=lambda x: x['rating'], reverse=True)
+    
+    # Pagination
+    per_page = 8
+    total_pages = (len(filtered_products) + per_page - 1) // per_page
+    start = (page - 1) * per_page
+    end = start + per_page
+    
+    paginated_products = filtered_products[start:end]
+    
+    return render_template('index2.html', 
+                         products=paginated_products,
+                         current_page=page,
+                         total_pages=total_pages,
+                         sort_by=sort_by,
+                         category=category,
+                         price_range=price_range)
 
 
 @app.route('/auctions')

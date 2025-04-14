@@ -63,34 +63,34 @@
     <!-- Product Filter -->
     <div class="card mb-4">
         <div class="card-body">
-            <form class="row align-items-center">
+            <form class="row align-items-center" method="GET" action="{{ url_for('product_page') }}">
                 <div class="col-md-3 mb-3 mb-md-0">
                     <label for="sort-by">Sort By</label>
-                    <select id="sort-by" class="form-control">
-                        <option>Newest</option>
-                        <option>Price: Low to High</option>
-                        <option>Price: High to Low</option>
-                        <option>Popularity</option>
+                    <select name="sort_by" id="sort-by" class="form-control">
+                        <option value="newest" {% if sort_by == 'newest' %}selected{% endif %}>Newest</option>
+                        <option value="price_low_high" {% if sort_by == 'price_low_high' %}selected{% endif %}>Price: Low to High</option>
+                        <option value="price_high_low" {% if sort_by == 'price_high_low' %}selected{% endif %}>Price: High to Low</option>
+                        <option value="popularity" {% if sort_by == 'popularity' %}selected{% endif %}>Popularity</option>
                     </select>
                 </div>
                 <div class="col-md-3 mb-3 mb-md-0">
                     <label for="category">Category</label>
-                    <select id="category" class="form-control">
-                        <option>All Categories</option>
-                        <option>Electronics</option>
-                        <option>Fashion</option>
-                        <option>Home & Living</option>
-                        <option>Toys & Games</option>
+                    <select name="category" id="category" class="form-control">
+                        <option value="all" {% if category == 'all' %}selected{% endif %}>All Categories</option>
+                        <option value="electronics" {% if category == 'electronics' %}selected{% endif %}>Electronics</option>
+                        <option value="gaming" {% if category == 'gaming' %}selected{% endif %}>Gaming</option>
+                        <option value="phones" {% if category == 'phones' %}selected{% endif %}>Phones</option>
+                        <option value="accessories" {% if category == 'accessories' %}selected{% endif %}>Accessories</option>
                     </select>
                 </div>
                 <div class="col-md-3 mb-3 mb-md-0">
                     <label for="price-range">Price Range</label>
-                    <select id="price-range" class="form-control">
-                        <option>All Prices</option>
-                        <option>Under $50</option>
-                        <option>$50 - $100</option>
-                        <option>$100 - $500</option>
-                        <option>$500+</option>
+                    <select name="price_range" id="price-range" class="form-control">
+                        <option value="all" {% if price_range == 'all' %}selected{% endif %}>All Prices</option>
+                        <option value="under_50" {% if price_range == 'under_50' %}selected{% endif %}>Under $50</option>
+                        <option value="50_100" {% if price_range == '50_100' %}selected{% endif %}>$50 - $100</option>
+                        <option value="100_500" {% if price_range == '100_500' %}selected{% endif %}>$100 - $500</option>
+                        <option value="over_500" {% if price_range == 'over_500' %}selected{% endif %}>$500+</option>
                     </select>
                 </div>
                 <div class="col-md-3 text-md-right mt-md-4">
@@ -171,10 +171,19 @@
     <!-- Pagination -->
     <nav aria-label="Product pagination" class="mt-5">
         <ul class="pagination justify-content-center">
-            <li class="page-item disabled">
-                <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+            <li class="page-item {% if current_page == 1 %}disabled{% endif %}">
+                <a class="page-link" href="{{ url_for('product_page', page=current_page-1, sort_by=sort_by, category=category, price_range=price_range) }}" tabindex="-1" {% if current_page == 1 %}aria-disabled="true"{% endif %}>Previous</a>
             </li>
-            <li class="page-item active"><a class="page-link" href="#">1</a></li>
+            {% for page_num in range(1, total_pages + 1) %}
+            <li class="page-item {% if page_num == current_page %}active{% endif %}">
+                <a class="page-link" href="{{ url_for('product_page', page=page_num, sort_by=sort_by, category=category, price_range=price_range) }}">{{ page_num }}</a>
+            </li>
+            {% endfor %}
+            <li class="page-item {% if current_page == total_pages %}disabled{% endif %}">
+                <a class="page-link" href="{{ url_for('product_page', page=current_page+1, sort_by=sort_by, category=category, price_range=price_range) }}" {% if current_page == total_pages %}aria-disabled="true"{% endif %}>Next</a>
+            </li>
+        </ul>
+    </nav>
             <li class="page-item"><a class="page-link" href="#">2</a></li>
             <li class="page-item"><a class="page-link" href="#">3</a></li>
             <li class="page-item">
