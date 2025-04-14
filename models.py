@@ -1,37 +1,36 @@
-class User:
-    def __init__(self, id, name, email, password_hash):
-        self.id = id
-        self.name = name
-        self.email = email
-        self.password_hash = password_hash
-        self.cart = []
-        self.orders = []
-        self.addresses = []
-        self.wishlist = []
 
-class Product:
-    def __init__(self, id, name, price, rating, image, category, description=None):
-        self.id = id
-        self.name = name
-        self.price = price
-        self.rating = rating
-        self.image = image
-        self.category = category
-        self.description = description
+from flask_sqlalchemy import SQLAlchemy
 
-class Auction:
-    def __init__(self, id, title, description, starting_bid, current_bid, buy_now_price, 
-                 seller, end_time, images, status="active"):
-        self.id = id
-        self.title = title
-        self.description = description
-        self.starting_bid = starting_bid
-        self.current_bid = current_bid
-        self.buy_now_price = buy_now_price
-        self.seller = seller
-        self.end_time = end_time
-        self.status = status
-        self.highest_bidder = None
-        self.bid_count = 0
-        self.bids = []
-        self.images = images
+db = SQLAlchemy()
+
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    email = db.Column(db.String(120), unique=True, nullable=False)
+    password_hash = db.Column(db.String(200), nullable=False)
+    
+    def __repr__(self):
+        return f'<User {self.email}>'
+
+class Product(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    price = db.Column(db.Float, nullable=False)
+    rating = db.Column(db.Float)
+    image = db.Column(db.String(200))
+    category = db.Column(db.String(50))
+    description = db.Column(db.Text)
+
+class Auction(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(200), nullable=False)
+    description = db.Column(db.Text)
+    starting_bid = db.Column(db.Float, nullable=False)
+    current_bid = db.Column(db.Float)
+    buy_now_price = db.Column(db.Float)
+    seller = db.Column(db.String(100))
+    end_time = db.Column(db.DateTime)
+    status = db.Column(db.String(20), default='active')
+    highest_bidder = db.Column(db.String(100))
+    bid_count = db.Column(db.Integer, default=0)
+    images = db.Column(db.Text)  # Store as JSON string
