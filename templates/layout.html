@@ -80,6 +80,30 @@
         {% block content %}{% endblock %}
     </main>
 
+    <!-- Mobile Navigation Bar -->
+    <div class="mobile-nav-bar d-md-none">
+        <a href="{{ url_for('home') }}" class="mobile-nav-item {% if request.endpoint == 'home' %}active{% endif %}">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
+        </a>
+        <a href="{{ url_for('product_page') }}" class="mobile-nav-item {% if request.endpoint == 'product_page' %}active{% endif %}">
+            <i class="fas fa-shopping-bag"></i>
+            <span>Shop</span>
+        </a>
+        <a href="{{ url_for('auctions_page') }}" class="mobile-nav-item {% if request.endpoint == 'auctions_page' %}active{% endif %}">
+            <i class="fas fa-gavel"></i>
+            <span>Auctions</span>
+        </a>
+        <a href="{{ url_for('view_cart') }}" class="mobile-nav-item {% if request.endpoint == 'view_cart' %}active{% endif %}">
+            <i class="fas fa-shopping-cart"></i>
+            <span>Cart</span>
+        </a>
+        <a href="{{ url_for('register') }}" class="mobile-nav-item {% if request.endpoint == 'register' %}active{% endif %}">
+            <i class="fas fa-user"></i>
+            <span>Account</span>
+        </a>
+    </div>
+
     <!-- Footer -->
     <div class="footer">
         <div class="container">

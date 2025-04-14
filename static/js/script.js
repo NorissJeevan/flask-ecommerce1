@@ -45,11 +45,48 @@ function setupEventListeners() {
  */
 function menutoggle() {
     const menuItems = document.getElementById("MenuItems");
+    const menuIcon = document.querySelector('.menu-icon');
+    
     if (menuItems) {
         menuItems.classList.toggle('active');
+        menuIcon.classList.toggle('active');
         document.body.style.overflow = menuItems.classList.contains('active') ? 'hidden' : '';
+        
+        // Add smooth sliding animation
+        if (menuItems.classList.contains('active')) {
+            menuItems.style.transform = 'translateX(0)';
+            menuItems.style.opacity = '1';
+        } else {
+            menuItems.style.transform = 'translateX(-100%)';
+            menuItems.style.opacity = '0';
+        }
     }
 }
+
+// Add touch ripple effect
+document.addEventListener('DOMContentLoaded', function() {
+    const buttons = document.querySelectorAll('.btn, .mobile-nav-item');
+    
+    buttons.forEach(button => {
+        button.addEventListener('touchstart', createRipple);
+    });
+    
+    function createRipple(event) {
+        const button = event.currentTarget;
+        const ripple = document.createElement('span');
+        const rect = button.getBoundingClientRect();
+        
+        ripple.className = 'ripple';
+        ripple.style.left = `${event.touches[0].clientX - rect.left}px`;
+        ripple.style.top = `${event.touches[0].clientY - rect.top}px`;
+        
+        button.appendChild(ripple);
+        
+        setTimeout(() => {
+            ripple.remove();
+        }, 600);
+    }
+});
 
 // Close menu when clicking outside
 document.addEventListener('click', function(event) {
