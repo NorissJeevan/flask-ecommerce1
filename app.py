@@ -545,8 +545,8 @@ def add_to_cart():
         # Get a mutable copy of the cart
         cart = session.get('cart', [])
         cart_item = next((item for item in cart if item.get('product_id') == product_id), None)
-    
-    if cart_item:
+        
+        if cart_item:
             cart_item['quantity'] += quantity
         else:
             cart.append({
