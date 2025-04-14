@@ -522,6 +522,29 @@ def add_to_wishlist(product_id):
     return jsonify({'success': True, 'message': 'Added to wishlist'})
 
 
+@app.route('/remove_from_cart', methods=['POST'])
+def remove_from_cart():
+    try:
+        product_id = int(request.form.get('product_id'))
+        
+        if 'cart' not in session:
+            return jsonify({'success': False, 'message': 'Cart is empty'}), 400
+            
+        cart = session.get('cart', [])
+        cart = [item for item in cart if item['product_id'] != product_id]
+        session['cart'] = cart
+        
+        return jsonify({
+            'success': True,
+            'message': 'Item removed from cart',
+            'cart_count': sum(item['quantity'] for item in cart)
+        })
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'message': 'An error occurred while removing from cart'
+        }), 500
+
 @app.route('/add_to_cart', methods=['POST'])
 def add_to_cart():
     try:

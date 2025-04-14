@@ -1,6 +1,3 @@
-/**
- * Cart.js - Handles shopping cart functionality
- */
 
 document.addEventListener('DOMContentLoaded', function() {
     // Add to cart functionality for product listings
@@ -8,30 +5,38 @@ document.addEventListener('DOMContentLoaded', function() {
     if (addToCartButtons.length > 0) {
         addToCartButtons.forEach(button => {
             button.addEventListener('click', function(e) {
-                // This is handled via AJAX in the template
+                e.preventDefault();
+                const form = this.closest('form');
+                const formData = new FormData(form);
                 
-                // Fallback if AJAX fails
-                if (!window.fetch) {
-                    // Submit the form normally
-                    return true;
-                }
+                fetch('/add_to_cart', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert(data.message);
+                        updateCartCount(data.cart_count);
+                    } else {
+                        alert('Error: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred while adding to cart');
+                });
             });
         });
     }
     
     // Cart page functionality
     if (window.location.pathname.includes('/cart')) {
-        // Quantity buttons
         setupQuantityButtons();
-        
-        // Remove buttons
         setupRemoveButtons();
     }
 });
 
-/**
- * Setup the quantity adjustment buttons in the cart
- */
 function setupQuantityButtons() {
     const increaseButtons = document.querySelectorAll('.increase-qty');
     const decreaseButtons = document.querySelectorAll('.decrease-qty');
@@ -39,7 +44,7 @@ function setupQuantityButtons() {
     
     increaseButtons.forEach(button => {
         button.addEventListener('click', function() {
-            const input = this.parentNode.parentNode.querySelector('input');
+            const input = this.closest('.input-group').querySelector('input');
             const currentValue = parseInt(input.value);
             input.value = currentValue + 1;
             updateCartItem(input.dataset.id, input.value);
@@ -48,7 +53,7 @@ function setupQuantityButtons() {
     
     decreaseButtons.forEach(button => {
         button.addEventListener('click', function() {
-            const input = this.parentNode.parentNode.querySelector('input');
+            const input = this.closest('.input-group').querySelector('input');
             const currentValue = parseInt(input.value);
             if (currentValue > 1) {
                 input.value = currentValue - 1;
@@ -69,9 +74,6 @@ function setupQuantityButtons() {
     });
 }
 
-/**
- * Setup the remove from cart buttons
- */
 function setupRemoveButtons() {
     const removeButtons = document.querySelectorAll('.remove-item');
     
@@ -79,31 +81,66 @@ function setupRemoveButtons() {
         button.addEventListener('click', function() {
             if (confirm('Are you sure you want to remove this item from your cart?')) {
                 const productId = this.dataset.id;
-                removeFromCart(productId);
+                const formData = new FormData();
+                formData.append('product_id', productId);
+                
+                fetch('/remove_from_cart', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Remove the item's row from the table
+                        this.closest('tr').remove();
+                        updateCartCount(data.cart_count);
+                        
+                        // If cart is empty, reload to show empty cart message
+                        if (data.cart_count === 0) {
+                            window.location.reload();
+                        } else {
+                            // Update cart totals
+                            window.location.reload(); // For now, reload to recalculate totals
+                        }
+                    } else {
+                        alert('Error: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred while removing the item');
+                });
             }
         });
     });
 }
 
-/**
- * Update the quantity of an item in the cart
- * @param {string} productId - The ID of the product
- * @param {number} quantity - The new quantity
- */
-function updateCartItem(productId, quantity) {
-    console.log(`Updating cart item ${productId} to quantity ${quantity}`);
-    // In a real implementation, this would make an AJAX call to update the cart
-    // For now, we'll just reload the page
-    window.location.reload();
+function updateCartCount(count) {
+    const cartCountElement = document.querySelector('.cart-count');
+    if (cartCountElement) {
+        cartCountElement.textContent = count;
+    }
 }
 
-/**
- * Remove an item from the cart
- * @param {string} productId - The ID of the product to remove
- */
-function removeFromCart(productId) {
-    console.log(`Removing item ${productId} from cart`);
-    // In a real implementation, this would make an AJAX call to remove the item
-    // For now, we'll just reload the page
-    window.location.reload();
+function updateCartItem(productId, quantity) {
+    const formData = new FormData();
+    formData.append('product_id', productId);
+    formData.append('quantity', quantity);
+    
+    fetch('/update_cart', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            window.location.reload(); // For now, reload to update totals
+        } else {
+            alert('Error: ' + data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred while updating the cart');
+    });
 }
