@@ -44,15 +44,77 @@ function setupEventListeners() {
  * Toggle the mobile menu
  */
 function menutoggle() {
-    const menuItems = document.getElementById("menu-items");
+    const menuItems = document.getElementById("MenuItems");
+    const menuIcon = document.querySelector('.menu-icon');
+    
     if (menuItems) {
-        if (menuItems.style.maxHeight) {
-            menuItems.style.maxHeight = null;
+        menuItems.classList.toggle('active');
+        menuIcon.classList.toggle('active');
+        document.body.style.overflow = menuItems.classList.contains('active') ? 'hidden' : '';
+        
+        // Add smooth sliding animation
+        if (menuItems.classList.contains('active')) {
+            menuItems.style.transform = 'translateX(0)';
+            menuItems.style.opacity = '1';
         } else {
-            menuItems.style.maxHeight = "200px";
+            menuItems.style.transform = 'translateX(-100%)';
+            menuItems.style.opacity = '0';
         }
     }
 }
+
+// Add touch ripple effect
+document.addEventListener('DOMContentLoaded', function() {
+    const buttons = document.querySelectorAll('.btn, .mobile-nav-item');
+    
+    buttons.forEach(button => {
+        button.addEventListener('touchstart', createRipple);
+    });
+    
+    function createRipple(event) {
+        const button = event.currentTarget;
+        const ripple = document.createElement('span');
+        const rect = button.getBoundingClientRect();
+        
+        ripple.className = 'ripple';
+        ripple.style.left = `${event.touches[0].clientX - rect.left}px`;
+        ripple.style.top = `${event.touches[0].clientY - rect.top}px`;
+        
+        button.appendChild(ripple);
+        
+        setTimeout(() => {
+            ripple.remove();
+        }, 600);
+    }
+});
+
+// Close menu when clicking outside
+document.addEventListener('click', function(event) {
+    const menuItems = document.getElementById("MenuItems");
+    const menuIcon = document.querySelector('.menu-icon');
+    
+    if (menuItems && menuItems.classList.contains('active')) {
+        if (!menuItems.contains(event.target) && !menuIcon.contains(event.target)) {
+            menuItems.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+    }
+});
+
+// Add touch support for product cards
+document.addEventListener('DOMContentLoaded', function() {
+    const productCards = document.querySelectorAll('.product-card');
+    
+    productCards.forEach(card => {
+        card.addEventListener('touchstart', function() {
+            this.style.transform = 'scale(0.98)';
+        });
+        
+        card.addEventListener('touchend', function() {
+            this.style.transform = 'scale(1)';
+        });
+    });
+});
 
 /**
  * Setup the add to cart forms
