@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,24 +12,26 @@
     <!-- Page-specific CSS -->
     {% block css %}{% endblock %}
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Recursive:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Recursive:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     {% block head_scripts %}{% endblock %}
 </head>
+
 <body>
     <!-- Flash Messages -->
     {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            {% for category, message in messages %}
-                <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
-                    {{ message }}
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-            {% endfor %}
-        {% endif %}
+    {% if messages %}
+    {% for category, message in messages %}
+    <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    {% endfor %}
+    {% endif %}
     {% endwith %}
 
     <!-- Header/Navbar -->
@@ -37,7 +40,8 @@
             <div class="navbar">
                 <div class="logo">
                     <a href="{{ url_for('home') }}">
-                        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Tradello Logo" width="200px">
+                        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Tradello Logo"
+                            width="200px">
                     </a>
                 </div>
                 <nav>
@@ -50,9 +54,9 @@
                         <li>
                             <a href="{{ url_for('register') }}">
                                 {% if 'user' in session %}
-                                    Account
+                                Account
                                 {% else %}
-                                    Sign In
+                                Sign In
                                 {% endif %}
                             </a>
                         </li>
@@ -61,10 +65,11 @@
                 <a href="{{ url_for('view_cart') }}" class="cart-img">
                     <img src="{{ url_for('static', filename='images/cart.svg') }}" width="30px" height="30px">
                     {% if session.get('cart') %}
-                        <span class="badge badge-danger">{{ session['cart']|length }}</span>
+                    <span class="badge badge-danger">{{ session['cart']|length }}</span>
                     {% endif %}
                 </a>
-                <img src="{{ url_for('static', filename='images/menu.png') }}" width="40" height="40" class="menu-icon" onclick="menutoggle()">
+                <img src="{{ url_for('static', filename='images/menu.png') }}" width="40" height="40" class="menu-icon"
+                    onclick="menutoggle()">
             </div>
 
             <!-- Page-specific header content -->
@@ -85,11 +90,13 @@
                     <h3>Download Our App</h3>
                     <p>Download App for Android and iOS mobile phone.</p>
                     <div class="store-badges">
-                        <a href="https://play.google.com/store/apps/details?id=com.tradello.app" target="_blank">
-                            <img src="{{ url_for('static', filename='images/store-badges/play-store.png') }}" width="60" height="80" alt="Play Store">
+                        <a href="https://play.google.com" target="_blank">
+                            <img src="{{ url_for('static', filename='images/store-badges/play-store.png') }}" width="60"
+                                height="80" alt="Play Store">
                         </a>
-                        <a href="https://apps.apple.com/app/tradello/id123456789" target="_blank">
-                            <img src="{{ url_for('static', filename='images/store-badges/app-store.png') }}" width="60" height="80" alt="App Store">
+                        <a href="https://apps.apple.com" target="_blank">
+                            <img src="{{ url_for('static', filename='images/store-badges/app-store.png') }}" width="60"
+                                height="80" alt="App Store">
                         </a>
                     </div>
                 </div>
@@ -140,7 +147,8 @@
             }
         }
     </script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
     {% block scripts %}{% endblock %}
 </body>
+
 </html>
