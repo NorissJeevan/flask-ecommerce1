@@ -13,11 +13,17 @@ logging.basicConfig(level=logging.DEBUG)
 app = Flask(__name__)
 app.secret_key = os.environ.get("SESSION_SECRET", "dev-key-for-testing")
 
+# Configure SQLite database
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///ecommerce.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+db.init_app(app)
+
 # Initialize Socket.IO
 socketio = SocketIO(app, cors_allowed_origins="*")
 
-# In-memory data storage
-users = {}
+# Create database tables
+with app.app_context():
+    db.create_all()
 products = [
     {
         "id": 1,
@@ -358,24 +364,24 @@ def register():
         password = request.form.get('loginPassword')
         
         # Check if user already exists
-        if get_user_by_email(email):
+        if User.query.filter_by(email=email).first():
             flash('Email already registered', 'error')
             return render_template('register.html')
         
         # Create new user
-        user_id = len(users) + 1
-        users[user_id] = {
-            'id': user_id,
-            'name': full_name,
-            'email': email,
-            'password_hash': generate_password_hash(password),
-            'cart': []
-        }
+        user = User(
+            name=full_name,
+            email=email,
+            password_hash=generate_password_hash(password)
+        )
+        
+        db.session.add(user)
+        db.session.commit()
         
         # Set session
-        session['user_id'] = user_id
-        session['user_email'] = email
-        session['user_name'] = full_name
+        session['user_id'] = user.id
+        session['user_email'] = user.email
+        session['user_name'] = user.name
         session['cart'] = []
         
         flash('Registration successful!', 'success')
@@ -390,21 +396,21 @@ def login():
         email = request.form.get('emailAddress')
         password = request.form.get('loginPassword')
         
-        user = get_user_by_email(email)
+        user = User.query.filter_by(email=email).first()
         
         if not user:
             flash('Email address not found', 'error')
             return render_template('login.html')
             
-        if not check_password_hash(user['password_hash'], password):
+        if not check_password_hash(user.password_hash, password):
             flash('Incorrect password', 'error')
             return render_template('login.html')
             
         # Login successful
-        session['user_id'] = user['id']
-        session['user_email'] = user['email']
-        session['user_name'] = user['name']
-        session['cart'] = user.get('cart', [])
+        session['user_id'] = user.id
+        session['user_email'] = user.email
+        session['user_name'] = user.name
+        session['cart'] = []  # Initialize empty cart
         
         flash('Login successful!', 'success')
         return redirect(url_for('home'))
