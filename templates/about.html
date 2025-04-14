@@ -14,7 +14,140 @@
     <div class="row mb-5">
         <div class="col-md-6">
             <h3>Our Story</h3>
-            <p>Tradello was founded in 2020 with a simple mission: to create an online marketplace where customers can find quality electronics at competitive prices with a seamless shopping experience.</p>
+            <p>Tradello was founded in 2025 {% extends 'layout.html' %}
+
+{% block title %}Tradello - About Us{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row">
+        <div class="col-12 text-center">
+            <h1 class="mb-4">About Tradello</h1>
+            <p class="lead mb-5">Your trusted destination for high-quality electronics and more</p>
+        </div>
+    </div>
+    
+    <div class="row mb-5">
+        <div class="col-md-6">
+            <h3>Our Story</h3>
+            <p>Tradello was founded in 2025 with a simple mission: to create an online marketplace where customers can find quality electronics at competitive prices with a seamless shopping experience.</p>
+            <p>What started as a small online store has grown into a comprehensive e-commerce platform offering thousands of products across multiple categories, from smartphones and laptops to gaming consoles and accessories.</p>
+            <p>Our team of tech enthusiasts is dedicated to curating the best products and bringing them to you with detailed information, competitive pricing, and exceptional customer service.</p>
+        </div>
+        <div class="col-md-6">
+            <img src="{{ url_for('static', filename='images/about/about-1.jpg') }}" alt="Our Team" class="img-fluid rounded shadow">
+        </div>
+    </div>
+    
+    <div class="row mb-5">
+        <div class="col-12 text-center">
+            <h3 class="mb-4">What Sets Us Apart</h3>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body text-center">
+                    <i class="fa fa-check-circle fa-3x text-success mb-3"></i>
+                    <h4>Quality Assurance</h4>
+                    <p>Every product in our inventory undergoes rigorous quality checks to ensure you receive only the best.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body text-center">
+                    <i class="fa fa-users fa-3x text-primary mb-3"></i>
+                    <h4>Customer First</h4>
+                    <p>Our dedicated support team is available to assist you with any questions or concerns.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body text-center">
+                    <i class="fa fa-shipping-fast fa-3x text-info mb-3"></i>
+                    <h4>Fast Delivery</h4>
+                    <p>We partner with reliable shipping companies to ensure your purchases reach you quickly and safely.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row mb-5">
+        <div class="col-md-6 order-md-2">
+            <h3>Our Vision</h3>
+            <p>At Tradello, we envision a world where accessing high-quality tech products is simple, transparent, and enjoyable. We strive to be more than just an online store – we aim to be your trusted advisor in all things tech.</p>
+            <p>We're constantly exploring new products, technologies, and services to enhance your shopping experience and help you make informed decisions about your tech purchases.</p>
+            <p>Our commitment to sustainability means we're always looking for ways to reduce our environmental impact, from eco-friendly packaging to promoting products with longer lifecycles.</p>
+        </div>
+        <div class="col-md-6 order-md-1">
+            <img src="{{ url_for('static', filename='images/about/about-2.jpg') }}" alt="Our Vision" class="img-fluid rounded shadow">
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-12 text-center">
+            <h3 class="mb-4">Meet Our Team</h3>
+            <p class="mb-5">Behind every successful order is our dedicated team of tech enthusiasts, customer service experts, and logistics professionals working together to provide you with the best possible experience.</p>
+        </div>
+        
+        <div class="col-md-3 mb-4">
+            <div class="card text-center border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="rounded-circle overflow-hidden mx-auto mb-3" style="width: 150px; height: 150px;">
+                        <img src="{{ url_for('static', filename='images/about/about-1.jpg') }}" alt="Team Member 1" class="img-fluid">
+                    </div>
+                    <h5>Sarah Johnson</h5>
+                    <p class="text-muted">Founder & CEO</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3 mb-4">
+            <div class="card text-center border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="rounded-circle overflow-hidden mx-auto mb-3" style="width: 150px; height: 150px;">
+                        <img src="{{ url_for('static', filename='images/about/about-2.jpg') }}" alt="Team Member 2" class="img-fluid">
+                    </div>
+                    <h5>David Chen</h5>
+                    <p class="text-muted">Head of Product</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3 mb-4">
+            <div class="card text-center border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="rounded-circle overflow-hidden mx-auto mb-3" style="width: 150px; height: 150px;">
+                        <img src="{{ url_for('static', filename='images/about/about-3.jpg') }}" alt="Team Member 3" class="img-fluid">
+                    </div>
+                    <h5>Maria Rodriguez</h5>
+                    <p class="text-muted">Customer Experience</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3 mb-4">
+            <div class="card text-center border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="rounded-circle overflow-hidden mx-auto mb-3" style="width: 150px; height: 150px;">
+                        <img src="{{ url_for('static', filename='images/about/about-4.jpg') }}" alt="Team Member 4" class="img-fluid">
+                    </div>
+                    <h5>James Wilson</h5>
+                    <p class="text-muted">Tech Specialist</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row mt-5">
+        <div class="col-12 text-center">
+            <h3>Join Our Journey</h3>
+            <p class="lead">We're excited to have you as part of the Tradello community. Explore our wide range of products and experience shopping reimagined.</p>
+            <a href="{{ url_for('product_page') }}" class="btn btn-primary mt-3">Shop Now</a>
+        </div>
+    </div>
+</div>
+{% endblock %} with a simple mission: to create an online marketplace where customers can find quality electronics at competitive prices with a seamless shopping experience.</p>
             <p>What started as a small online store has grown into a comprehensive e-commerce platform offering thousands of products across multiple categories, from smartphones and laptops to gaming consoles and accessories.</p>
             <p>Our team of tech enthusiasts is dedicated to curating the best products and bringing them to you with detailed information, competitive pricing, and exceptional customer service.</p>
         </div>
