@@ -6,6 +6,7 @@ from flask import Flask, render_template, request, redirect, url_for, session, f
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_socketio import SocketIO, emit
 from flask_sqlalchemy import SQLAlchemy
+from models import User
 
 # Initialize SQLAlchemy
 db = SQLAlchemy()
