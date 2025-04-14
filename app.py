@@ -524,52 +524,52 @@ def add_to_wishlist(product_id):
 
 @app.route('/add_to_cart', methods=['POST'])
 def add_to_cart():
-    product_id = int(request.form.get('product_id'))
-    quantity = int(request.form.get('quantity', 1))
-    
-    # Get the product
-    product = next((p for p in products if p['id'] == product_id), None)
-    
-    if not product:
-        return json.dumps({'success': False, 'message': 'Product not found'}), 404
-    
-    # Check if user is logged in
-    if 'user_id' not in session:
-        return json.dumps({'success': False, 'message': 'Please login first'}), 401
-    
-    # Initialize cart in session if it doesn't exist
-    if 'cart' not in session:
-        session['cart'] = []
-    
-    # Check if product is already in cart
-    cart = session['cart']
-    cart_item = next((item for item in cart if item['product_id'] == product_id), None)
+    try:
+        product_id = int(request.form.get('product_id'))
+        quantity = int(request.form.get('quantity', 1))
+        
+        # Get the product
+        product = next((p for p in products if p['id'] == product_id), None)
+        
+        if not product:
+            return jsonify({'success': False, 'message': 'Product not found'}), 404
+        
+        # Check if user is logged in
+        if 'user_id' not in session:
+            return jsonify({'success': False, 'message': 'Please login first'}), 401
+        
+        # Initialize cart in session if it doesn't exist
+        if 'cart' not in session:
+            session['cart'] = []
+        
+        # Get a mutable copy of the cart
+        cart = session.get('cart', [])
+        cart_item = next((item for item in cart if item.get('product_id') == product_id), None)
     
     if cart_item:
-        cart_item['quantity'] += quantity
-    else:
-        cart.append({
-            'product_id': product_id,
-            'quantity': quantity,
-            'name': product['name'],
-            'price': product['price'],
-            'image': product['image']
+            cart_item['quantity'] += quantity
+        else:
+            cart.append({
+                'product_id': product_id,
+                'quantity': quantity,
+                'name': product['name'],
+                'price': product['price'],
+                'image': product['image']
+            })
+        
+        # Update session with the new cart
+        session['cart'] = cart
+        
+        return jsonify({
+            'success': True,
+            'cart_count': sum(item['quantity'] for item in cart),
+            'message': f"{product['name']} added to cart"
         })
-    
-    # Update session
-    session['cart'] = cart
-    
-    # Update user cart if authenticated
-    if 'user_id' in session:
-        user_id = session['user_id']
-        if user_id in users:
-            users[user_id]['cart'] = cart
-    
-    return json.dumps({
-        'success': True, 
-        'cart_count': sum(item['quantity'] for item in cart),
-        'message': f"{product['name']} added to cart"
-    })
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'message': 'An error occurred while adding to cart'
+        }), 500
 
 
 @app.route('/cart')
