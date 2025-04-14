@@ -5,6 +5,10 @@ from datetime import datetime, timedelta
 from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_socketio import SocketIO, emit
+from flask_sqlalchemy import SQLAlchemy
+
+# Initialize SQLAlchemy
+db = SQLAlchemy()
 
 # Configure logging
 logging.basicConfig(level=logging.DEBUG)
