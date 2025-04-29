@@ -22,7 +22,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
 # Import models after db initialization
-from models import User, Product, Auction
+from models import User, Product, Auction, Order, Item
 
 # Configure logging
 logging.basicConfig(level=logging.DEBUG)
