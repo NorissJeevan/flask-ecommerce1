@@ -6,6 +6,8 @@ from flask import Flask, render_template, request, redirect, url_for, session, f
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_socketio import SocketIO, emit
 from flask_sqlalchemy import SQLAlchemy
+from flask_login import LoginManager, UserMixin, login_user, login_required, current_user
+from functools import wraps
 import logging
 
 # Initialize Flask app
@@ -34,8 +36,42 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///ecommerce.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db.init_app(app)
 
-# Initialize Socket.IO
+# Initialize Socket.IO and Login Manager
 socketio = SocketIO(app, cors_allowed_origins="*")
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'login'
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
+
+def admin_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if not current_user.is_authenticated or not current_user.is_admin:
+            flash('You need to be an admin to access this page.', 'error')
+            return redirect(url_for('login'))
+        return f(*args, **kwargs)
+    return decorated_function
+
+@app.route('/admin/dashboard')
+@login_required
+@admin_required
+def admin_dashboard():
+    total_orders = Order.query.count()
+    total_revenue = db.session.query(db.func.sum(Order.total_amount)).filter(Order.status == 'completed').scalar() or 0.0
+    total_items = Item.query.count()
+    
+    inventory = Item.query.all()
+    recent_orders = Order.query.order_by(Order.date_ordered.desc()).limit(10).all()
+    
+    return render_template('admin/dashboard.html',
+                         total_orders=total_orders,
+                         total_revenue=total_revenue,
+                         total_items=total_items,
+                         inventory=inventory,
+                         recent_orders=recent_orders)
 
 # Create database tables
 with app.app_context():
@@ -423,10 +459,14 @@ def login():
             return render_template('login.html')
             
         # Login successful
+        login_user(user)
         session['user_id'] = user.id
         session['user_email'] = user.email
         session['user_name'] = user.name
         session['cart'] = []  # Initialize empty cart
+        
+        if user.is_admin:
+            return redirect(url_for('admin_dashboard'))
         
         flash('Login successful!', 'success')
         return redirect(url_for('home'))
@@ -521,6 +561,29 @@ def add_to_wishlist(product_id):
     
     return jsonify({'success': True, 'message': 'Added to wishlist'})
 
+
+@app.route('/remove_from_cart', methods=['POST'])
+def remove_from_cart():
+    try:
+        product_id = int(request.form.get('product_id'))
+        
+        if 'cart' not in session:
+            return jsonify({'success': False, 'message': 'Cart is empty'}), 400
+            
+        cart = session.get('cart', [])
+        cart = [item for item in cart if item['product_id'] != product_id]
+        session['cart'] = cart
+        
+        return jsonify({
+            'success': True,
+            'message': 'Item removed from cart',
+            'cart_count': sum(item['quantity'] for item in cart)
+        })
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'message': 'An error occurred while removing from cart'
+        }), 500
 
 @app.route('/add_to_cart', methods=['POST'])
 def add_to_cart():
