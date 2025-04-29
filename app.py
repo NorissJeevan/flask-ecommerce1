@@ -59,17 +59,21 @@ def admin_required(f):
 @login_required
 @admin_required
 def admin_dashboard():
+    # Get basic stats
     total_orders = Order.query.count()
     total_revenue = db.session.query(db.func.sum(Order.total_amount)).filter(Order.status == 'completed').scalar() or 0.0
     total_items = Item.query.count()
+    low_stock_count = Item.query.filter(Item.quantity < 10).count()
     
-    inventory = Item.query.all()
+    # Get inventory and recent orders
+    inventory = Item.query.order_by(Item.name).all()
     recent_orders = Order.query.order_by(Order.date_ordered.desc()).limit(10).all()
     
     return render_template('admin/dashboard.html',
                          total_orders=total_orders,
                          total_revenue=total_revenue,
                          total_items=total_items,
+                         low_stock_count=low_stock_count,
                          inventory=inventory,
                          recent_orders=recent_orders)
 
