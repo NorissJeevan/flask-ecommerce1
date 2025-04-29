@@ -555,6 +555,14 @@ def add_address():
         
 
 
+@app.route('/admin/inventory')
+@login_required
+@admin_required
+def inventory_sales():
+    inventory = Item.query.order_by(Item.name).all()
+    orders = Order.query.order_by(Order.date_ordered.desc()).all()
+    return render_template('admin/inventory.html', inventory=inventory, orders=orders)
+
 @app.route('/check_db')
 @login_required
 @admin_required
