@@ -33,11 +33,7 @@ class User(db.Model, UserMixin):
     password_hash = db.Column(db.String(200), nullable=False)
     is_admin = db.Column(db.Boolean, default=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    
     orders = db.relationship('Order', backref='user', lazy=True)
-    
-    def __repr__(self):
-        return f'<User {self.email}>'
 
 class Item(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -47,7 +43,6 @@ class Item(db.Model):
     quantity = db.Column(db.Integer, default=0)
     category = db.Column(db.String(50))
     image = db.Column(db.String(200))
-    
     order_items = db.relationship('OrderItem', backref='item', lazy=True)
 
 class Order(db.Model):
@@ -56,7 +51,6 @@ class Order(db.Model):
     date_ordered = db.Column(db.DateTime, default=datetime.utcnow)
     status = db.Column(db.String(20), default='pending')
     total_amount = db.Column(db.Float, nullable=False)
-    
     items = db.relationship('OrderItem', backref='order', lazy=True)
 
 class OrderItem(db.Model):
