@@ -447,6 +447,7 @@ def login():
     if request.method == 'POST':
         email = request.form.get('emailAddress')
         password = request.form.get('loginPassword')
+        login_type = request.form.get('login_type')
         
         user = User.query.filter_by(email=email).first()
         
@@ -457,6 +458,11 @@ def login():
         if not check_password_hash(user.password_hash, password):
             flash('Incorrect password', 'error')
             return render_template('login.html')
+        
+        # Check admin access
+        if login_type == 'admin' and not user.is_admin:
+            flash('You do not have admin privileges', 'error')
+            return render_template('login.html')
             
         # Login successful
         login_user(user)
@@ -464,8 +470,10 @@ def login():
         session['user_email'] = user.email
         session['user_name'] = user.name
         session['cart'] = []  # Initialize empty cart
+        session['is_admin'] = user.is_admin
         
-        if user.is_admin:
+        if user.is_admin and login_type == 'admin':
+            flash('Welcome Admin!', 'success')
             return redirect(url_for('admin_dashboard'))
         
         flash('Login successful!', 'success')
@@ -541,6 +549,24 @@ def add_address():
             users[user_id]['addresses'] = []
         users[user_id]['addresses'].append(address)
         
+
+
+@app.route('/check_db')
+@login_required
+@admin_required
+def check_db():
+    users = User.query.all()
+    products = Product.query.all()
+    orders = Order.query.all()
+    items = Item.query.all()
+    
+    return {
+        'users': [{'id': u.id, 'email': u.email, 'name': u.name} for u in users],
+        'products': [{'id': p.id, 'name': p.name, 'price': p.price} for p in products],
+        'orders': [{'id': o.id, 'user_id': o.user_id, 'total': o.total_amount} for o in orders],
+        'items': [{'id': i.id, 'name': i.name, 'quantity': i.quantity} for i in items]
+    }
+
     return jsonify({'success': True, 'message': 'Address added successfully'})
 
 @app.route('/add_to_wishlist/<int:product_id>')
