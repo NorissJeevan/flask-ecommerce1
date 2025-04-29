@@ -122,8 +122,28 @@
                             <input type="password" class="form-control input-with-icon" name="loginPassword" id="loginPassword" required placeholder="Password">
                             <small class="form-text text-muted ms-2">Password must be at least 8 characters long</small>
                         </div>
+
+                        <div class="mb-4">
+                            <div class="form-check d-flex align-items-center">
+                                <input class="form-check-input me-2" type="checkbox" id="terms" required>
+                                <label class="form-check-label text-muted" for="terms">
+                                    I agree to the <a href="#" class="text-primary">Terms of Service</a>
+                                </label>
+                            </div>
+                        </div>
                         
-                        <button type="submit" class="btn btn-login w-100 py-3 rounded-pill shadow-sm mb-4">Sign In</button>
+                        <div class="row">
+                            <div class="col-6">
+                                <button type="submit" name="login_type" value="user" class="btn btn-login w-100 py-3 rounded-pill shadow-sm mb-4">
+                                    User Login
+                                </button>
+                            </div>
+                            <div class="col-6">
+                                <button type="submit" name="login_type" value="admin" class="btn btn-danger w-100 py-3 rounded-pill shadow-sm mb-4">
+                                    Admin Login
+                                </button>
+                            </div>
+                        </div>
                         
                         <p class="text-center mb-0">
                             Don't have an account? <a href="{{ url_for('register') }}" class="text-primary fw-bold">Register</a>

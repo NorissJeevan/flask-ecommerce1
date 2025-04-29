@@ -447,6 +447,7 @@ def login():
     if request.method == 'POST':
         email = request.form.get('emailAddress')
         password = request.form.get('loginPassword')
+        login_type = request.form.get('login_type')
         
         user = User.query.filter_by(email=email).first()
         
@@ -457,6 +458,11 @@ def login():
         if not check_password_hash(user.password_hash, password):
             flash('Incorrect password', 'error')
             return render_template('login.html')
+        
+        # Check admin access
+        if login_type == 'admin' and not user.is_admin:
+            flash('You do not have admin privileges', 'error')
+            return render_template('login.html')
             
         # Login successful
         login_user(user)
@@ -464,8 +470,10 @@ def login():
         session['user_email'] = user.email
         session['user_name'] = user.name
         session['cart'] = []  # Initialize empty cart
+        session['is_admin'] = user.is_admin
         
-        if user.is_admin:
+        if user.is_admin and login_type == 'admin':
+            flash('Welcome Admin!', 'success')
             return redirect(url_for('admin_dashboard'))
         
         flash('Login successful!', 'success')
