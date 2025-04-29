@@ -541,6 +541,24 @@ def add_address():
             users[user_id]['addresses'] = []
         users[user_id]['addresses'].append(address)
         
+
+
+@app.route('/check_db')
+@login_required
+@admin_required
+def check_db():
+    users = User.query.all()
+    products = Product.query.all()
+    orders = Order.query.all()
+    items = Item.query.all()
+    
+    return {
+        'users': [{'id': u.id, 'email': u.email, 'name': u.name} for u in users],
+        'products': [{'id': p.id, 'name': p.name, 'price': p.price} for p in products],
+        'orders': [{'id': o.id, 'user_id': o.user_id, 'total': o.total_amount} for o in orders],
+        'items': [{'id': i.id, 'name': i.name, 'quantity': i.quantity} for i in items]
+    }
+
     return jsonify({'success': True, 'message': 'Address added successfully'})
 
 @app.route('/add_to_wishlist/<int:product_id>')
